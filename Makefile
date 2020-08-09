@@ -11,6 +11,7 @@ endif
 # Project structure
 CLIENT_DIR := client
 SERVER_DIR := server
+GUI_DIR:= gui
 
 SRC_DIR 	:= $(SERVER_DIR)/src
 BUILD_TARGET := $(SERVER_DIR)/build
@@ -42,6 +43,7 @@ INCLUDE_LIST 	:= $(patsubst $(SERVER_DIR)/include%,-I $(SERVER_DIR)/include%,$(H
 
 CFLAGS=-c -std=c++1z -Wall -Werror -g
 CLIENT_FLAGS= -std=c++1z -Wall -Werror -g
+GUI_FLAGS= -std=c++1z `wx-config --cxxflags --libs` -Wall -Werror -g
 
 $(EXEC_TARGET): $(O_FILE_FULL_PATH_LIST)
 	@mkdir -p $(EXEC_TARGET)
@@ -65,7 +67,14 @@ client:
 	@echo "$(CC) $(CLIENT_FLAGS) -o $(CLIENT_DIR)/client $(CLIENT_DIR)/client.cpp";
 	$(CC) $(CLIENT_FLAGS) -o $(CLIENT_DIR)/client $(CLIENT_DIR)/client.cpp 
 	./$(CLIENT_DIR)/client "127.0.0.1" "8080" "Hello kitty"
-	
+
+gui:
+	echo "Cleaning $(GUI_DIR)/gui ...";
+	$(RM) $(GUI_DIR)/gui
+	@echo "$(CC) $(GUI_FLAGS) -o $(GUI_DIR)/gui $(GUI_DIR)/gui.cpp"
+	$(CC) $(GUI_FLAGS) -o $(GUI_DIR)/gui $(GUI_DIR)/gui.cpp
+	./$(GUI_DIR)/gui
+
 debug:
 	@echo "SRC_FULL_PATH_LIST $(SRC_FULL_PATH_LIST)"
 	@echo "O_FILE_FULL_PATH_LIST $(O_FILE_FULL_PATH_LIST)"
@@ -80,4 +89,4 @@ clean:
 hardclean:
 	@echo "Cleaning $(EXEC_FULL_PATH) and $(BUILD_TARGET)/* ..."; $(RM) -r $(BUILD_TARGET)/* $(EXEC_FULL_PATH)
 
-.PHONY: clean	client
+.PHONY: clean	client gui
