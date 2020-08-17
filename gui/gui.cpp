@@ -5,6 +5,26 @@
     #include "wx/wx.h"
 #endif
 
+class MySIN: public mpFX{
+  double m_freq, m_amp
+  public:
+    MySin(double freq, double amp) : mpFX (wxT("f(x) = SIN(x)"), mpALIGN_LEFT){
+      m_freq = feq;
+      m_amp = amp;
+      m_drawOutsideMargins = false;
+    }
+
+    virtual double GetY(double x) {
+      return m_amp * sin(x/6.283185/m_freq);
+    }
+    virtual double GetMinY(){ 
+      return -m_amp;
+    }
+    virtual double GetMaxY(){
+      return m_amp;
+    }
+}
+
 // Every app should define a new class derivated from wxApp (By overridding 
 // xnApp's Oninit() virtual method the program can be initialized)
 class MyApp : public wxApp

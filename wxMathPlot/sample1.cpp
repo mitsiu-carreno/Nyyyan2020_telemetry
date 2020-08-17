@@ -30,8 +30,8 @@
 // derived classes
 
 class MySIN;
-class MyCOSinverse;
-class MyLissajoux;
+//class MyCOSinverse;
+//class MyLissajoux;
 class MyFrame;
 class MyApp;
 
@@ -46,7 +46,7 @@ public:
     virtual double GetMinY() { return -m_amp; }
     virtual double GetMaxY() { return  m_amp; }
 };
-
+/*
 // MyCOSinverse
 
 class MyCOSinverse : public mpFY
@@ -58,9 +58,9 @@ public:
     virtual double GetMinX() { return -m_amp; }
     virtual double GetMaxX() { return  m_amp; }
 };
-
+*/
 // MyLissajoux
-
+/*
 class MyLissajoux : public mpFXY
 {
     double m_rad;
@@ -88,7 +88,7 @@ public:
     virtual double GetMaxY() { return  m_rad; }
 };
 
-
+*/
 
 // MyFrame
 
@@ -108,9 +108,9 @@ public:
     void OnToggleScrollbars(wxCommandEvent& event);
     void OnToggleInfoLayer(wxCommandEvent& event);
     void OnSaveScreenshot(wxCommandEvent& event);
-	void OnToggleLissajoux(wxCommandEvent& event);
+	//void OnToggleLissajoux(wxCommandEvent& event);
 	void OnToggleSine(wxCommandEvent& event);
-	void OnToggleCosine(wxCommandEvent& event);
+	//void OnToggleCosine(wxCommandEvent& event);
 	void OnBlackTheme(wxCommandEvent& event);
 
     mpWindow        *m_plot;
@@ -170,9 +170,9 @@ BEGIN_EVENT_TABLE(MyFrame,wxFrame)
   EVT_MENU(ID_TOGGLE_INFO, MyFrame::OnToggleInfoLayer)
   EVT_MENU(ID_SAVE_SCREENSHOT, MyFrame::OnSaveScreenshot)
   EVT_MENU(ID_BLACK_THEME, MyFrame::OnBlackTheme)
-  EVT_MENU(ID_TOGGLE_LISSAJOUX, MyFrame::OnToggleLissajoux)
+  //EVT_MENU(ID_TOGGLE_LISSAJOUX, MyFrame::OnToggleLissajoux)
   EVT_MENU(ID_TOGGLE_SINE, MyFrame::OnToggleSine)
-  EVT_MENU(ID_TOGGLE_COSINE, MyFrame::OnToggleCosine)
+  //EVT_MENU(ID_TOGGLE_COSINE, MyFrame::OnToggleCosine)
 END_EVENT_TABLE()
 
 MyFrame::MyFrame()
@@ -251,8 +251,8 @@ MyFrame::MyFrame()
     m_plot->AddLayer(     xaxis );
     m_plot->AddLayer(     yaxis );
     m_plot->AddLayer(     new MySIN( 10.0, 220.0 ) );
-    m_plot->AddLayer(     new MyCOSinverse( 10.0, 100.0 ) );
-    m_plot->AddLayer( l = new MyLissajoux( 125.0 ) );
+    //m_plot->AddLayer(     new MyCOSinverse( 10.0, 100.0 ) );
+    //m_plot->AddLayer( l = new MyLissajoux( 125.0 ) );
 	m_plot->AddLayer(     vectorLayer );
     m_plot->AddLayer(     new mpText(wxT("mpText sample"), 10, 10) );
     wxBrush hatch(wxColour(200,200,200), wxSOLID);
@@ -460,22 +460,23 @@ void MyFrame::OnSaveScreenshot(wxCommandEvent& event)
     }
     event.Skip();
 }
-
+/*
 void MyFrame::OnToggleLissajoux(wxCommandEvent& event)
 {
 	m_plot->SetLayerVisible(wxT("Lissajoux"), event.IsChecked());
 }
+*/
 
 void MyFrame::OnToggleSine(wxCommandEvent& event)
 {
 	m_plot->SetLayerVisible(wxT("f(x) = SIN(x)"), event.IsChecked());
 }
-
+/*
 void MyFrame::OnToggleCosine(wxCommandEvent& event)
 {
 	m_plot->SetLayerVisible(wxT("g(y) = COS(y)"), event.IsChecked());
 }
-
+*/
 //-----------------------------------------------------------------------------
 // MyApp
 //-----------------------------------------------------------------------------
