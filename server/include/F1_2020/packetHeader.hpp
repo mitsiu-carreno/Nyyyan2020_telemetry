@@ -1,4 +1,7 @@
-#include "type_alias.hpp"
+#ifndef PACKET_HEADER_H
+#define PACKET_HEADER_H
+
+#include "typeAlias.hpp"
 
 struct PacketHeader
 {
@@ -29,3 +32,5 @@ enum PacketIdDetail{
   final_clasification,                    // Final classification confirmation at the end of a race
   lobby_info                              // Information about players in a multiplayer lobby
 };
+
+#endif

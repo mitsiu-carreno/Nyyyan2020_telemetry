@@ -1,4 +1,18 @@
-#include "type_alias.hpp"
+#ifndef MOTION_PACKET_H
+#define MOTION_PACKET_H
+
+#include "typeAlias.hpp"
+#include "packetHeader.hpp"
+
+/*
+ * The motion packet gives physics data for all the cars being driven. There is additional data for the car being driven with the goal of being able to drive a motion platform setup.
+ *
+ * N.B. For the normalised vectors below, to convert to float values divide by 32767.0f – 16-bit signed values are used to pack the data and on the assumption that direction values are always between -1.0f and 1.0f.
+ *
+ * Frequency: Rate as specified in menus
+ * Size: 1464 bytes (Packet size updated in Beta 3)
+ * Version: 1
+*/
 
 struct CarMotionData
 {
@@ -45,3 +59,5 @@ struct PacketMotionData
     float         m_angularAccelerationZ;       // Angular velocity z-component
     float         m_frontWheelsAngle;           // Current front wheels angle in radians
 };
+
+#endif
