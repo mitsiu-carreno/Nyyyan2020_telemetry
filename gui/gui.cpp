@@ -5,6 +5,8 @@
     #include "wx/wx.h"
 #endif
 
+class MySin;
+
 class MySIN: public mpFX{
   double m_freq, m_amp
   public:
@@ -45,19 +47,47 @@ class MyFrame : public wxFrame
 {
 public:
     MyFrame();
-private:
+
+    
     void OnHello(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
+    void OnFit(wxCommandEvent& event);
+    void OnAlignXAxis(wxCommandEvent& event);
+    void OnAlignYAxis(wxCommandEvent& event);
+
+    mpWindow    *m_plot;
+    wxTextCtrl  *_log;
+private:
+
+    int axesPos[2];
+    bool ticks;
+    mpInfoCoords *nfo;  // mpInfoLayer *nfo;
+    DECLARE_DYNAMIC_CLASS(MyFrame)
+    DECLARE_EVENT_TABLE()
 };
 
-// In order to be able to react to a menu command, it must be given a unique identifier (const variable or enum element) 
+// In order to be able to react to a menu command, it must be given a unique identifier (const variable or enum element)
 enum
 {
-    ID_Hello = 1
+    ID_Hello = 1 ID_EXIT = 108,
+    ID_ABOUT,
+    ID_ALIGN_X_AXIS,
+    ID_ALIGN_Y_AXIS
 };
 // Notice you don't need to define identifiers FOR "About" and "Exit" as wxWidgets already predefines standard values
 // such as wxID_ABOUT and wxID_EXIT ((use these whenever possible as they can be handled in a special way by a particular platform)
+
+
+IMPLEMENT_DYNAMIC_CLASS(MyFrame, wxFrame)
+
+BEGIN_EVENT_TABLE(MyFrame, wxFrame)
+    EVT_MENU(ID_ABOUT, MyFrame::OnAbout)
+    EVT_MENU(ID_EXIT, MyFrame::OnExit)
+    EVT_MENU(mpID_FIT, MyFrame::OnFit)
+    EVT_MENU(ID_ALIGN_X_AXIS, MyFrame::OnAlignXAxis)
+    EVT_MENU(ID_ALIGN_Y_AXIS, MyFrame::OnAlignYAxis)
+END_EVENT_TABLE()
 
 // As in all programs, there must be a "main" function. Under wxWidgets, main is implemented inside the "wxIMPLEMENT_APP()" macro, 
 // which creates an application instance of the specified class and starts running the GUI event loop
@@ -73,7 +103,6 @@ bool MyApp::OnInit()
     frame->Show(true);
     return true;
 }
-
 // In the constructor of the main window, we create a menu with our menu items, as well as a status bar to be shown at the bottom of the main window
 // Both have to be bound to the frame with respective calls
 
@@ -83,13 +112,19 @@ bool MyApp::OnInit()
 // We also have to connect our event handlers to the events we want to handle in them. We do this by calling Bind() to send all the menus events 
 // (identified by wxEVENT_MENU event type) with the specified ID to the given function
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Hello World")
+    //: wxFrame(NULL, wxID_ANY, "Hello World")
+    : wxFrame( (wxFrame *)NULL, -1, wxT("wxWindow mathplot sample"), wxDefaultPosition, wxSize(500, 500) )
 {
-    wxMenu *menuFile = new wxMenu;
+    //wxMenu *menuFile = new wxMenu;
+    wxMenu *menu_file = new wxMenu();
+    wxMenu *view_menu = new wxMenu();
+    wxMenu *show_menu = new wxMenu();
+
     menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
                      "Help string shown in status bar for this menu item");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
+    
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append(wxID_ABOUT);
     wxMenuBar *menuBar = new wxMenuBar;
