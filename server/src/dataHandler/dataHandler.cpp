@@ -1,11 +1,12 @@
 #include "constants.hpp"
 #include "thread.hpp"
-#include "type_alias.hpp"
+#include "typeAlias.hpp"
 #include "packetHeader.hpp"
-#include "motion_packet.hpp"
+#include "motionPacket.hpp"
 #include <istream>
 #include <string>
 #include <cstdint>
+#include <iostream>
 
 namespace datahandler{
 
@@ -22,7 +23,8 @@ namespace datahandler{
     thread::PrintSafe("second_player_car_index: " + std::to_string(test->m_secondaryPlayerCarIndex) + "\n");
   }
 
-  void PrintData(char buffer[constants::kMaxBytesMsg]){
+  void PrintData(char (&buffer)[constants::kMaxBytesMsg]){
+    std::cout << "buffer address2:" << &buffer << "\n"; 
 /*
     uint8 packet_type = buffer.header.m_packetId;
     thread::PrintSafe(std::to_string(packet_type));
