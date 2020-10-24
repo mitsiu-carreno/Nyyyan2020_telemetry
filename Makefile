@@ -43,13 +43,17 @@ INCLUDE_LIST 	:= $(patsubst $(SERVER_DIR)/include%,-I $(SERVER_DIR)/include%,$(H
 CFLAGS=-c -std=c++1z -Wall -Werror -g
 CLIENT_FLAGS= -std=c++1z -Wall -Werror -g
 
-$(EXEC_TARGET): $(O_FILE_FULL_PATH_LIST)
+$(EXEC_TARGET): $(O_FILE_FULL_PATH_LIST)	
+	@echo ""
+	@echo "-------REMEMBER-------"
+	@echo "you can go 'make PORT=\"8081\"'"
+	@echo ""
 	@mkdir -p $(EXEC_TARGET)
 	@echo "Linking..."
 	@echo "		$(CC) $^ -o $(EXEC_FULL_PATH)"; $(CC) $^ -o $(EXEC_FULL_PATH);
 	@echo "Build complete, executing..."
 	@echo ""
-	./$(EXEC_FULL_PATH)
+	./$(EXEC_FULL_PATH) $(PORT)
 
 $(BUILD_TARGET)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
 	@mkdir -p $(BUILD_DIRECTORY_LIST)
@@ -57,7 +61,11 @@ $(BUILD_TARGET)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
 	@echo "$(CC) $(CFLAGS) $(INCLUDE_LIST) $< -o $@"; $(CC) $(CFLAGS) $(INCLUDE_LIST) $< -o $@
 
 run:
-	./$(EXEC_FULL_PATH)
+	@echo ""
+	@echo "-------REMEMBER-------"
+	@echo "you can go 'make run PORT=\"8081\"'"
+	@echo ""
+	./$(EXEC_FULL_PATH) $(PORT)
 
 client:
 	@echo "Cleaning $(CLIENT_DIR)/client ...";

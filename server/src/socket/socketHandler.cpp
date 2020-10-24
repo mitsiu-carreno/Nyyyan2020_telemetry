@@ -14,6 +14,10 @@
 //#include <netinet/in.h>
 #include <cstring>  // memset required it
 
+
+// Forward declaration of variable defined in globals.cpp
+extern int gPort;
+
 namespace sockethandler{
   void ListenConnections(std::future<void> future_obj){
   
@@ -91,7 +95,7 @@ namespace sockethandler{
     // Bind socket to ip address and port
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(constants::kPort);   // convert from little to big endian
+    server_addr.sin_port = htons(gPort);   // convert from little to big endian
 
     // Bind socket (just an int, with an address and a port, so any traffic to that address and port 
     // gets handled to the socket)
@@ -113,7 +117,7 @@ namespace sockethandler{
     socklen_t client_length = sizeof(client_addr);
     char buffer [constants::kMaxBytesMsg];
 
-    thread::PrintSafe("Listening connections on port " + std::to_string(constants::kPort) + "\n");
+    thread::PrintSafe("Listening connections on port " + std::to_string(gPort) + "\n");
 
     // Enter loop (wait for thread signal to interrupt)
     while(future_obj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout){

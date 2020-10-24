@@ -71,7 +71,7 @@ struct EventKeyValue{
 };
 
 
-struct EventKeyValue event_code_value[] {
+const struct EventKeyValue event_code_value[] {
   {"SSTA", "Session Started"},      // Sent when the session starts
   {"SEND", "Session Ended"},        // Sent when the session ends
   {"FTLP", "Fastest Lap"},          // When a driver achieves the fastest lap
