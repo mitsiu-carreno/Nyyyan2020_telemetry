@@ -3,10 +3,7 @@
 #include "typeAlias.hpp"
 #include "packetHeader.hpp"
 #include "motionPacket.hpp"
-#include <istream>
 #include <string>
-#include <cstdint>
-#include <iostream>
 
 namespace datahandler{
 
@@ -24,30 +21,26 @@ namespace datahandler{
   }
 
   void PrintData(char (&buffer)[constants::kMaxBytesMsg]){
-    std::cout << "buffer address2:" << &buffer << "\n"; 
-/*
-    uint8 packet_type = buffer.header.m_packetId;
-    thread::PrintSafe(std::to_string(packet_type));
-*/
 
-   
-    //thread::PrintSafe("test: " + std::to_string(sizeof(buffer)) + "\n");
+    // op1
+    //char header_arr [sizeof(PacketHeader)];
+    //memcpy(header_arr, &buffer[0], sizeof(PacketHeader));
+    //PacketHeader *packet_header = reinterpret_cast<struct PacketHeader*>(header_arr);
+    // op2
+    PacketHeader *packet_header = reinterpret_cast<struct PacketHeader *>(&buffer);
+    // Stop if casting fail
+    if(packet_header == nullptr){
+      return;
+    }
 
-    char subTest [sizeof(PacketHeader) +1];
+    PrintPacketHeader(packet_header);
 
-    memcpy(subTest, &buffer[0], sizeof(PacketHeader));
-    
-    PacketHeader *test = (struct PacketHeader*) subTest;
-    //PrintPacketHeader(*test);
-
-    switch(test->m_packetId){
+    switch(packet_header->m_packetId){
       case PacketIdDetail::motion:{
         thread::PrintSafe("motion package\n");
         
-        char subsubTest [sizeof(PacketMotionData) +1];
-        memcpy(subsubTest, &buffer[0], sizeof(PacketMotionData));
-        PacketMotionData *test2 = (struct PacketMotionData*) subsubTest;
-       
+        PacketMotionData *test2 = reinterpret_cast<struct PacketMotionData*>(&buffer);
+ 
         thread::PrintSafe("x_position: " + std::to_string(test2->m_carMotionData[0].m_worldPositionX) + "\n");
         thread::PrintSafe("y_position: " + std::to_string(test2->m_carMotionData[0].m_worldPositionY) + "\n");
         thread::PrintSafe("force_longitudinal: " + std::to_string(test2->m_carMotionData[0].m_gForceLongitudinal) + "\n");

@@ -2,6 +2,7 @@
 #define LAP_DATA_PACKET_H
 
 #include "typeAlias.hpp"
+#include "packetHeader.hpp"
 
 /*
  * The lap data packet gives details of all the cars in the session.

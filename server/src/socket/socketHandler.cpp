@@ -3,7 +3,6 @@
 #include "constants.hpp"
 #include "thread.hpp"
 #include <future>
-#include <iostream>
 #include <string>
 
 #include <stdio.h>  // perror definition
@@ -149,7 +148,6 @@ namespace sockethandler{
       // client_addr.sin_addr store ip address as bytes, we turn it into a string "127.0.0.1"
       inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, 256);  
       thread::PrintSafe("Msg received from " + std::string(client_ip) + "\n");
-      std::cout << "buffer address1: " <<  &buffer;
       datahandler::PrintData(buffer);    
     }   
   
