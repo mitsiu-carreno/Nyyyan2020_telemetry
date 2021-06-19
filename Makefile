@@ -40,13 +40,14 @@ HEADER_DIRECTORY_LIST	:= $(shell find $(SERVER_DIR)/include \( -name '*.hpp' -o 
 INCLUDE_LIST 	:= $(patsubst $(SERVER_DIR)/include%,-I $(SERVER_DIR)/include%,$(HEADER_DIRECTORY_LIST))
 
 
-CFLAGS=-c -std=c++1z -Wall -Werror -g
+CFLAGS=-c -std=c++1z -Wall -Werror -g 
+CFLAGS_LINKER=-lpthread
 CLIENT_FLAGS= -std=c++1z -Wall -Werror -g
 
 $(EXEC_TARGET): $(O_FILE_FULL_PATH_LIST)
 	@mkdir -p $(EXEC_TARGET)
 	@echo "Linking..."
-	@echo "		$(CC) $^ -o $(EXEC_FULL_PATH)"; $(CC) $^ -o $(EXEC_FULL_PATH);
+	@echo "		$(CC) $^ -o $(EXEC_FULL_PATH) $(CFLAGS_LINKER)"; $(CC) $^ -o $(EXEC_FULL_PATH) $(CFLAGS_LINKER);
 	@echo "Build complete, executing..."
 	@echo ""
 	./$(EXEC_FULL_PATH)

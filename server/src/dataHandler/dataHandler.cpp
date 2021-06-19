@@ -3,6 +3,7 @@
 #include <istream>
 #include <string>
 #include <cstdint>
+#include <cstring>
 
 typedef std::uint_fast8_t   uint8;
 typedef std::int_fast8_t    int8;
@@ -45,7 +46,7 @@ namespace datahandler{
 
     char subTest [sizeof(PacketHeader) +1];
 
-    memcpy(subTest, &buffer[0], sizeof(PacketHeader));
+    std::memcpy(subTest, &buffer[0], sizeof(PacketHeader));
     
     PacketHeader *test = (struct PacketHeader*) subTest;
     thread::PrintSafe("packet_format: " + std::to_string(test->m_packetFormat) + "\n");

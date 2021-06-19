@@ -1,0 +1,5 @@
+*.o
+server/bin/*
+!server/biuld/.gitkeep
+*.swp
+*.swp
