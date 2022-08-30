@@ -35,24 +35,24 @@ namespace thread{
     // Create a std::promise object
     std::promise<void> exit_signal;
 
-   // Fetch the associated future object from this promise
+    // Fetch the associated future object from this promise
     std::future<void> future_obj = exit_signal.get_future();
 
 
-   // Create a new thread that calls GetUserInterrumption()
+    // Create a new thread that calls GetUserInterrumption()
     std::thread get_user_interruption_thread(&utils::GetUserInterruption);
 
-   // Create a new thread that calls ListenConnections() and send future_obj as argument
+    // Create a new thread that calls ListenConnections() and send future_obj as argument
     std::thread listen_connections_thread(&sockethandler::ListenConnections, std::move(future_obj));
 
-  // Both threads are executing concurrently
+    // Both threads are executing concurrently
   
-  // When user_interruption is catched 
-  get_user_interruption_thread.join();
-  thread::PrintSafe("Signaling socket to close\n");
-  // Send signal to end listen connection thread
-  exit_signal.set_value(); 
-  listen_connections_thread.join(); 
+    // When user_interruption is catched 
+    get_user_interruption_thread.join();
+    thread::PrintSafe("Signaling socket to close\n");
+    // Send signal to end listen connection thread
+    exit_signal.set_value(); 
+    listen_connections_thread.join(); 
 
   }
 
