@@ -3,7 +3,6 @@
 #include "constants.hpp"
 #include "thread.hpp"
 #include <future>
-#include <iostream>
 #include <string>
 
 #include <stdio.h>  // perror definition
@@ -14,6 +13,10 @@
 #include <arpa/inet.h>  // struct sockaddr_in
 //#include <netinet/in.h>
 #include <cstring>  // memset required it
+
+
+// Forward declaration of variable defined in globals.cpp
+extern int gPort;
 
 namespace sockethandler{
   void ListenConnections(std::future<void> future_obj){
@@ -92,7 +95,7 @@ namespace sockethandler{
     // Bind socket to ip address and port
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(constants::kPort);   // convert from little to big endian
+    server_addr.sin_port = htons(gPort);   // convert from little to big endian
 
     // Bind socket (just an int, with an address and a port, so any traffic to that address and port 
     // gets handled to the socket)
@@ -114,9 +117,9 @@ namespace sockethandler{
     socklen_t client_length = sizeof(client_addr);
     char buffer [constants::kMaxBytesMsg];
 
-    thread::PrintSafe("Listening connections on port " + std::to_string(constants::kPort) + "\n");
+    thread::PrintSafe("Listening connections on port " + std::to_string(gPort) + "\n");
 
-    // Enter loop
+    // Enter loop (wait for thread signal to interrupt)
     while(future_obj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout){
       
       // Clean memory
@@ -134,7 +137,7 @@ namespace sockethandler{
       // addrlen - variable in which size of src_addr structure is returned
       int bytes_in = recvfrom(sock_fd, buffer, constants::kMaxBytesMsg, MSG_WAITALL, reinterpret_cast<struct sockaddr *>(&client_addr), &client_length);
       if(bytes_in == -1){
-        thread::PrintSafe("No data received\n");
+        thread::PrintSafe("No data received \"q\" TO QUIT!!!!\n");
         continue;
       }
 
@@ -148,9 +151,8 @@ namespace sockethandler{
       // ntop = number to pointer to string     // pton = pointer to string to number
       // client_addr.sin_addr store ip address as bytes, we turn it into a string "127.0.0.1"
       inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, 256);  
-      thread::PrintSafe("Msg received from " + std::string(client_ip) + ":" + std::string(buffer) + "\n");
+      thread::PrintSafe("Msg received from " + std::string(client_ip) + "\n");
       datahandler::PrintData(buffer);    
-  
     }   
   
     thread::PrintSafe("Closing socket\n");

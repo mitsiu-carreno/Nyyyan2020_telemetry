@@ -1,5 +1,8 @@
+.DS_Store
+*.swp
 *.o
-server/bin/*
-!server/biuld/.gitkeep
-*.swp
-*.swp
+
+*/bin/*
+!*/bin/.gitkeep
+*/build/*
+!*/build/.gitkeep

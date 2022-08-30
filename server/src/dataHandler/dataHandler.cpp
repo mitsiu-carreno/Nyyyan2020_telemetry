@@ -1,6 +1,8 @@
 #include "constants.hpp"
 #include "thread.hpp"
-#include <istream>
+#include "typeAlias.hpp"
+#include "packetHeader.hpp"
+#include "motionPacket.hpp"
 #include <string>
 #include <cstdint>
 #include <cstring>
@@ -33,22 +35,10 @@ struct PacketHeader
 PacketHeader pHeader;
 
 
+
 namespace datahandler{
 
-  void PrintData(char buffer[constants::kMaxBytesMsg]){
-/*
-    uint8 packet_type = buffer.header.m_packetId;
-    thread::PrintSafe(std::to_string(packet_type));
-*/
-
-   
-    //thread::PrintSafe("test: " + std::to_string(sizeof(buffer)) + "\n");
-
-    char subTest [sizeof(PacketHeader) +1];
-
-    std::memcpy(subTest, &buffer[0], sizeof(PacketHeader));
-    
-    PacketHeader *test = (struct PacketHeader*) subTest;
+  void PrintPacketHeader(PacketHeader *test){
     thread::PrintSafe("packet_format: " + std::to_string(test->m_packetFormat) + "\n");
     thread::PrintSafe("packet_major_version: " + std::to_string(test->m_gameMajorVersion) + "\n");
     thread::PrintSafe("packet_minor_version: " + std::to_string(test->m_gameMinorVersion) + "\n");
@@ -59,5 +49,38 @@ namespace datahandler{
     thread::PrintSafe("frame_identifier: " + std::to_string(test->m_frameIdentifier) + "\n");
     thread::PrintSafe("player_car_index: " + std::to_string(test->m_playerCarIndex) + "\n");
     thread::PrintSafe("second_player_car_index: " + std::to_string(test->m_secondaryPlayerCarIndex) + "\n");
+  }
+
+  void PrintData(char (&buffer)[constants::kMaxBytesMsg]){
+
+    // op1
+    //char header_arr [sizeof(PacketHeader)];
+    //memcpy(header_arr, &buffer[0], sizeof(PacketHeader));
+    //PacketHeader *packet_header = reinterpret_cast<struct PacketHeader*>(header_arr);
+    // op2
+    PacketHeader *packet_header = reinterpret_cast<struct PacketHeader *>(&buffer);
+    // Stop if casting fail
+    if(packet_header == nullptr){
+      return;
+    }
+
+    PrintPacketHeader(packet_header);
+
+    switch(packet_header->m_packetId){
+      case PacketIdDetail::motion:{
+        thread::PrintSafe("motion package\n");
+        
+        PacketMotionData *test2 = reinterpret_cast<struct PacketMotionData*>(&buffer);
+ 
+        thread::PrintSafe("x_position: " + std::to_string(test2->m_carMotionData[0].m_worldPositionX) + "\n");
+        thread::PrintSafe("y_position: " + std::to_string(test2->m_carMotionData[0].m_worldPositionY) + "\n");
+        thread::PrintSafe("force_longitudinal: " + std::to_string(test2->m_carMotionData[0].m_gForceLongitudinal) + "\n");
+        thread::PrintSafe("force_lateral: " + std::to_string(test2->m_carMotionData[0].m_gForceLateral) + "\n\n");
+        break;
+      }
+      default:
+        thread::PrintSafe("other package\n");
+        break;
+    }
   }
 }

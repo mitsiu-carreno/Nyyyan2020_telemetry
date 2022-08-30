@@ -4,7 +4,7 @@
 #include "constants.hpp"
 
 namespace datahandler{
-  void PrintData(char buffer[constants::kMaxBytesMsg]);
+  void PrintData(char (&buffer)[constants::kMaxBytesMsg]);
 }
 
 #endif
