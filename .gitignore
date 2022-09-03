@@ -2,7 +2,7 @@
 *.swp
 *.o
 
-*/bin/*
+/bin/*
 !*/bin/.gitkeep
 */build/*
 !*/build/.gitkeep
