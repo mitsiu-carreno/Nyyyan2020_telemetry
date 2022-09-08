@@ -1,15 +1,13 @@
-// TODO confirm this
-#include <stdlib.h>     // EXIT_FAILURE & htons
-#include <unistd.h>     // close(socket)
-#include <sys/socket.h> // sock() & AF_INET & SOCK_DGRAM & shutdown
-#include <arpa/inet.h>  // sockaddr_in
+#include <sys/socket.h> // socket() & recvfrom() & AF_INET & SOCK_DGRAM & shutdown
+#include <arpa/inet.h>  // htons & htonl
+#include <unistd.h>     // close()
 #include <cstring>      // memset
-
 #include <iostream>
 
 #include "constants.hpp"
 #include "data_handler.hpp"
 #include "socket.hpp"
+
 
 void sockethandler::ListenConnections(){
     int sock_fd; 
@@ -54,7 +52,7 @@ void sockethandler::ListenConnections(){
     char packet[constants::kMaxPacketSize];
     while(true){
       memset(&client_address, 0, sizeof(client_address));
-      memset(&packet, 0 , 50);
+      memset(&packet, 0 , constants::kMaxPacketSize);
 
       // size_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen)
       // Receive a message from the socket
@@ -64,15 +62,22 @@ void sockethandler::ListenConnections(){
       // flags - bitwise or of flags to modify socket behaviour
       // src_addr - structure containing source address is returned
       // addrlen - variable in which size of src_addr structure is returned
-      int bytes_in = recvfrom(sock_fd, packet, 50, 0, reinterpret_cast<struct sockaddr *>(&client_address), &client_length);
+      //PacketHeader test;
+      int bytes_in = recvfrom(sock_fd, packet, constants::kMaxPacketSize, 0, reinterpret_cast<struct sockaddr *>(&client_address), &client_length);
       if(bytes_in < 0){
         throw "No data received";
       }
+      packet[bytes_in] = '\0';
+      std::cout << bytes_in << " bytes received\n";
 
       // echo "test" | nc -uw1 127.0.0.1 8088
-      //std::cout << "Msg: " <<  std::string(packet) << "\n";
-      DataHandler::GetPacketId(packet);
+      //std::cout << "Msg: " <<  std::hex << packet << "\n";
+      
+      //std::cout << "Reading Byte [" << DataHandler::kPacketIdPadding  << "]\n";
+      //std::cout << (int)packet[DataHandler::kPacketIdPadding] << "\n";
 
+      //DataHandler::PrintHeader(packet);
+      DataHandler::GetPacketData(packet, static_cast<int>(packet[DataHandler::kPacketIdPadding]));
 
     }
 

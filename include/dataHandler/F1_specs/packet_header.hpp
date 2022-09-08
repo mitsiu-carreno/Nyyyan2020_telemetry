@@ -20,6 +20,5 @@ struct PacketHeader
                                           // 255 if no second player
 };
 
-const short packet_id_padding = 40;
 
 #endif

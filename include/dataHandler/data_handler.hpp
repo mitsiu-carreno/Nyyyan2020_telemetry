@@ -6,7 +6,16 @@
 #include "motion_packet.hpp"
 
 namespace DataHandler{
-  uint8 GetPacketId(char [constants::kMaxPacketSize]);
+  
+  inline const short kPacketIdPadding = 
+    sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetFormat)
+    + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMajorVersion)
+    + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMinorVersion)
+    + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetVersion);
+
+  void PrintHeader(char [constants::kMaxPacketSize]);
+  //void* GetPacketData(char [constants::kMaxPacketSize], int packet_id);
+  void GetPacketData(char [constants::kMaxPacketSize], int);
 };
 
 #endif

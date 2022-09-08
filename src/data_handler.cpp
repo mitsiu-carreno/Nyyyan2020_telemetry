@@ -1,22 +1,40 @@
-#include "constants.hpp"
-#include "data_handler.hpp"
-
 #include <iostream>
 #include <string>
 
-uint8 DataHandler::GetPacketId(char packet[constants::kMaxPacketSize]){
-  PacketHeader *ph = reinterpret_cast<struct PacketHeader *>(&packet);
-  std::cout << "Start......\n";
-  std::cout << std::to_string(ph->m_packetFormat) << "\n";
-  std::cout << std::to_string(ph->m_gameMajorVersion) << "\n";
-  std::cout << std::to_string(ph->m_gameMinorVersion) << "\n";
-  std::cout << std::to_string(ph->m_packetId) << "\n";
+#include "constants.hpp"
+#include "data_handler.hpp"
 
-  //uint8 packetId = packet[40];
-  //std::cout << packetId << "-TEST\n";
-  //return packetId;
-  return 1;
+void DataHandler::PrintHeader(char packet[constants::kMaxPacketSize]){
+  
+  std::cout << "Start......\n";
+      PacketHeader * test = reinterpret_cast<PacketHeader *>(packet);
+      std::cout << "Packet format\n";
+      std::cout << test->m_packetFormat << "\n";
+      printf("%x\n", test->m_packetFormat);
+      std::cout <<"Game Major Version\n";
+      std::cout << (int)test->m_gameMajorVersion << "\n";
+  printf("%x\n", packet[2]);
+      std::cout <<"Game Minor Version\n";
+      std::cout << (int)test->m_gameMinorVersion <<"\n";
+  printf("%x & %d", packet[3], packet[3]);
+      std::cout <<"Paccket Version\n";
+      std::cout << (int)test->m_packetVersion << "\n";
+  printf("%x\n", packet[4]);
+      std::cout <<"PacketId\n";
+      std::cout << (int)test->m_packetId << "\n";
+  printf("%x\n", packet[5]);
 }
 
-
+void DataHandler::GetPacketData(char packet[constants::kMaxPacketSize], int packet_id){
+  void * packet_data = nullptr;
+  switch(packet_id){
+    case 0: 
+      packet_data = reinterpret_cast<struct PacketMotionData*>(packet);
+      break;
+  } 
+  if(packet_data != nullptr){
+    std::cout << (int)reinterpret_cast<struct PacketMotionData*>(packet_data)->m_header.m_packetId << "\n";
+  }
+  //return packet_data;
+}
 
