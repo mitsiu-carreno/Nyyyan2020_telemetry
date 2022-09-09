@@ -34,10 +34,13 @@ BUILD_DIRECTORY_LIST  := $(sort $(BUILD_DIRECTORY_LIST))
 HEADER_DIRECTORY_LIST := $(shell find $(INCLUDE_DIR) \( -name '*.hpp' -o -name '*.h' \) -exec dirname {} \; | sort | uniq )
 # Prefix -I to all directories containing .hpp and .h files
 INCLUDE_LIST          := $(patsubst $(INCLUDE_DIR)%, -I $(INCLUDE_DIR)%, $(HEADER_DIRECTORY_LIST))
+INCLUDE_EXTRAS= -I/usr/include/python3.10
 
 # Compile flags
 CFLAGS= -c -std=c++1z -Wall -Werror -g
-LFLAGS= -lpthread
+#CFLAGS= -c -std=c++1z 
+# Linker flags
+LFLAGS= -lpthread -lpython3.10
 
 $(EXEC_DIR): $(O_FILE_FULL_PATH_LIST)
 	@echo ""
@@ -56,7 +59,7 @@ $(EXEC_DIR): $(O_FILE_FULL_PATH_LIST)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
 	@mkdir -p $(BUILD_DIRECTORY_LIST)
 	@echo "Compiling $<..."
-	@echo "$(CC) $(CFLAGS) $(INCLUDE_LIST) $< -o $@"; $(CC) $(CFLAGS) $(INCLUDE_LIST) $< -o $@
+	@echo "$(CC) $(CFLAGS) $(INCLUDE_EXTRAS) $(INCLUDE_LIST) $< -o $@"; $(CC) $(CFLAGS) $(INCLUDE_EXTRAS) $(INCLUDE_LIST) $< -o $@
 
 run:
 	@echo ""

@@ -33,7 +33,14 @@ void DataHandler::GetPacketData(char packet[constants::kMaxPacketSize], int pack
       break;
   } 
   if(packet_data != nullptr){
-    std::cout << (int)reinterpret_cast<struct PacketMotionData*>(packet_data)->m_header.m_packetId << "\n";
+    PacketMotionData *packet = reinterpret_cast<struct PacketMotionData*>(packet_data);
+    //std::cout << (int)reinterpret_cast<struct PacketMotionData*>(packet_data)->m_header.m_packetId << "\n";
+    std::cout << (int)packet->m_header.m_packetId << "\n";
+    //Plot(packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionX,
+    //     packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionY);
+    plot->UpdatePosition(packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionX,
+      packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionY);
+    
   }
   //return packet_data;
 }
