@@ -37,7 +37,7 @@ INCLUDE_LIST          := $(patsubst $(INCLUDE_DIR)%, -I $(INCLUDE_DIR)%, $(HEADE
 INCLUDE_EXTRAS= -I/usr/include/python3.10
 
 # Compile flags
-CFLAGS= -c -std=c++1z -Wall -Werror -g
+CFLAGS= -c -std=c++1z -Wall -Werror -g -O3
 #CFLAGS= -c -std=c++1z 
 # Linker flags
 LFLAGS= -lpthread -lpython3.10

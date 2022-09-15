@@ -1,6 +1,8 @@
 #ifndef F1_TYPES_ALIAS_H
 #define F1_TYPES_ALIAS_H
 
+#include <cstdint>
+
 typedef std::uint8_t   uint8;
 typedef std::int8_t    int8;
 typedef std::uint16_t  uint16;

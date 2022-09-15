@@ -21,7 +21,7 @@ class Plot{
     }
     void UpdatePosition(float pos_x, float pos_y);
 
-    static void DrawPlot();
+    void DrawPlot();
 };
 
 #endif

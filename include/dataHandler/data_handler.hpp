@@ -2,7 +2,7 @@
 #define DATA_HANDLER_H
 
 #include "F1_types_alias.hpp"
-#include "packet_header.hpp"
+#include "header_packet.hpp"
 #include "motion_packet.hpp"
 
 namespace DataHandler{
@@ -13,9 +13,8 @@ namespace DataHandler{
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMinorVersion)
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetVersion);
 
-  void PrintHeader(char [constants::kMaxPacketSize]);
-  //void* GetPacketData(char [constants::kMaxPacketSize], int packet_id);
-  void GetPacketData(char [constants::kMaxPacketSize], int);
+  void DebugHeader(char *, PacketHeader *);
+  void MarshallPacket(char *, int);
 };
 
 #endif

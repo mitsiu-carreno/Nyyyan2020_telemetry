@@ -4,6 +4,7 @@
 #include <cstring>      // memset
 #include <iostream>
 
+#include "F1_types_alias.hpp"
 #include "constants.hpp"
 #include "data_handler.hpp"
 #include "socket.hpp"
@@ -49,10 +50,10 @@ void sockethandler::ListenConnections(){
     // Create structure for client connecting
     sockaddr_in client_address;
     socklen_t client_length = sizeof(client_address);
-    char packet[constants::kMaxPacketSize];
+    char buffer[constants::kMaxPacketSize];
     while(true){
       memset(&client_address, 0, sizeof(client_address));
-      memset(&packet, 0 , constants::kMaxPacketSize);
+      memset(&buffer, 0 , constants::kMaxPacketSize);
 
       // size_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen)
       // Receive a message from the socket
@@ -63,21 +64,17 @@ void sockethandler::ListenConnections(){
       // src_addr - structure containing source address is returned
       // addrlen - variable in which size of src_addr structure is returned
       //PacketHeader test;
-      int bytes_in = recvfrom(sock_fd, packet, constants::kMaxPacketSize, 0, reinterpret_cast<struct sockaddr *>(&client_address), &client_length);
+      int bytes_in = recvfrom(sock_fd, buffer, constants::kMaxPacketSize, 0, reinterpret_cast<struct sockaddr *>(&client_address), &client_length);
       if(bytes_in < 0){
         throw "No data received";
       }
-      packet[bytes_in] = '\0';
+      buffer[bytes_in] = '\0';
       std::cout << bytes_in << " bytes received\n";
 
       // echo "test" | nc -uw1 127.0.0.1 8088
-      //std::cout << "Msg: " <<  std::hex << packet << "\n";
+      //std::cout << "Msg: " <<  std::hex << buffer << "\n";
       
-      //std::cout << "Reading Byte [" << DataHandler::kPacketIdPadding  << "]\n";
-      //std::cout << (int)packet[DataHandler::kPacketIdPadding] << "\n";
-
-      //DataHandler::PrintHeader(packet);
-      DataHandler::GetPacketData(packet, static_cast<int>(packet[DataHandler::kPacketIdPadding]));
+      DataHandler::MarshallPacket(buffer, static_cast<uint8>(buffer[DataHandler::kPacketIdPadding]));
 
     }
 
