@@ -78,11 +78,17 @@ class MotionMarshall{
    MotionMarshall(void *struct_addr, char *buffer, int buffer_offset=0){
     for(short prop_pos {0}; prop_pos < this->GetTotalProps(); ++prop_pos){
       short required_bytes = this->GetPropSize(prop_pos);
-      memcpy(
-        this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos),
-        &buffer[buffer_offset],
-        required_bytes
-      );
+      // TODO handle header better
+      if(prop_pos == 0){
+        HeaderMarshall(this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos), buffer);
+      }else{
+      
+        memcpy(
+          this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos),
+          &buffer[buffer_offset],
+          required_bytes
+        );
+      }
       buffer_offset += required_bytes;
     }
    }

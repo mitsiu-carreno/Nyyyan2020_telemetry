@@ -51,7 +51,7 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
         std::cout << "FAILED TO STORE PACKET\n";
       }
      
-      HeaderMarshall(ptr_packet_data, buffer); 
+      MotionMarshall(ptr_packet_data, buffer); 
       DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
       break;
   } 
