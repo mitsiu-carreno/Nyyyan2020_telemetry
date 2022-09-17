@@ -24,8 +24,53 @@ struct PacketHeader
 };
 
 class HeaderMarshall{
-  private:
-    static std::vector<std::pair<short, short>> header_descriptor;
+  public:
+    //static std::vector<std::pair<short, short>> header_descriptor;
+    static unsigned int header_descriptor [10][4];
+
+    /*
+    static void Debug(){
+      for(size_t row{0}; row < sizeof(HeaderMarshall::header_descriptor)/(sizeof(HeaderMarshall::header_descriptor[0])); ++row){
+        for(size_t col{0}; col < sizeof(HeaderMarshall::header_descriptor[0])/ sizeof(HeaderMarshall::header_descriptor[0][0]); ++col){
+            std::cout << HeaderMarshall::header_descriptor[row][col] << "\t";
+        }
+        std::cout << "\n";
+
+      }
+    }
+
+    static void ValidatePosition(unsigned int pos){
+      if(pos < sizeof(HeaderMarshall::header_descriptor)/sizeof(HeaderMarshall::header_descriptor[0]) ){
+        return;
+      }
+      throw -1;
+    }
+
+    static unsigned int GetTotalProps(){
+      return sizeof(HeaderMarshall::header_descriptor)/sizeof(HeaderMarshall::header_descriptor[0]);
+    }
+
+    static unsigned int GetPropSize(unsigned int pos){
+      ValidatePosition(pos);
+      return HeaderMarshall::header_descriptor[pos][0];
+    }
+
+    static void* GetStructOffset(char *struct_addr, unsigned int pos){
+      ValidatePosition(pos);
+      return struct_addr + HeaderMarshall::header_descriptor[pos][1];
+    }
+
+    static unsigned int GetNumberOfElements(unsigned int pos){
+      ValidatePosition(pos);
+      return HeaderMarshall::header_descriptor[pos][0] / HeaderMarshall::header_descriptor[pos][2];
+    }
+
+    static unsigned int GetPropType(unsigned int pos){
+      ValidatePosition(pos);
+      return HeaderMarshall::header_descriptor[pos][3];
+    }
+    */
+    /*
     static void Debug(){
       for (const auto& attr:header_descriptor){
         std::cout << attr.first << " " << attr.second << "\n";
@@ -43,19 +88,23 @@ class HeaderMarshall{
     static void* GetStructOffset(char *struct_addr, short pos){
       return struct_addr + HeaderMarshall::header_descriptor.at(pos).second;
     }
-
+    */
+/*
   public:
     HeaderMarshall(void *struct_addr, char *buffer, int buffer_offset=0){
-      for(short prop_pos {0}; prop_pos < this->GetTotalProps(); ++prop_pos){
-        short required_bytes = this->GetPropSize(prop_pos);
-        memcpy(
-          this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos),
-          &buffer[buffer_offset],
-          required_bytes
-        );
-        buffer_offset += required_bytes;
+      for(size_t prop_pos {0}; prop_pos < this->GetTotalProps(); ++prop_pos){
+        for(size_t arr_pos {1}; arr_pos <= this->GetNumberOfElements(prop_pos); ++arr_pos){
+          unsigned int required_bytes = this->GetPropSize(prop_pos);
+          memcpy(
+            this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos),
+            &buffer[buffer_offset],
+            required_bytes
+          );
+          buffer_offset += required_bytes;
+        }
       }
     }
+    */
 };
 
 

@@ -13,7 +13,7 @@ namespace DataHandler{
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMinorVersion)
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetVersion);
 
-  void DebugHeader(char *, PacketHeader *);
+  void DebugMotion(char *, PacketMotionData *);
   void MarshallPacket(char *, int);
 };
 

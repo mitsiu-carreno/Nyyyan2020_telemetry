@@ -6,6 +6,13 @@
 #include "data_handler.hpp"
 #include "header_packet.hpp"
 
+
+void DataHandler::DebugMotion(char *buffer, PacketMotionData *packet_addr){
+  std::cout << "IN\n";
+        //printf("struct: %u struct: %x packet: %x%x\n", packet_addr->m_header.m_packetFormat, packet_addr->m_header.m_packetFormat, buffer[0], buffer[1]);
+
+}
+/*
 void DataHandler::DebugHeader(char *buffer, PacketHeader *packet_addr){
   
   std::cout << "Start Debug......\n";
@@ -40,6 +47,7 @@ void DataHandler::DebugHeader(char *buffer, PacketHeader *packet_addr){
       printf("%x Hex from test\n", packet_addr->m_playerCarIndex);
       printf("%x Hex from packet\n", buffer[22]);
 }
+*/
 
 void DataHandler::MarshallPacket(char *buffer, int packet_id){
   void * ptr_packet_data = nullptr;
@@ -50,9 +58,11 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
       }catch(...){ // TODO catch actual exception
         std::cout << "FAILED TO STORE PACKET\n";
       }
-     
-      MotionMarshall(ptr_packet_data, buffer); 
-      DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
+      
+   std::cout << "------Marshall motion packet\n"; 
+      MotionMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor)); 
+      //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
+      DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
       break;
   } 
 }
