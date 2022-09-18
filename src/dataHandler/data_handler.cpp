@@ -6,6 +6,10 @@
 #include "data_handler.hpp"
 #include "header_packet.hpp"
 
+#include <stdio.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <math.h>
 
 void DataHandler::DebugMotion(char *buffer, PacketMotionData *packet_addr){
 
@@ -33,10 +37,20 @@ void DataHandler::DebugMotion(char *buffer, PacketMotionData *packet_addr){
   
   
   std::cout << "---------Motion packet\n";
-  for(size_t i{0}; i<22; ++i){
+  for(size_t i{0}; i<1; ++i){
     std::cout << "-----Car " << i << "\n";
+    union {
+        float f;
+        uint32_t u;
+    } f2u = { .f = packet_addr->m_carMotionData[i].m_worldPositionX };
         std::cout << "World space X position " << sizeof(packet_addr->m_carMotionData[i].m_worldPositionX) << "\n";
-    printf("struct: %f struct: %f packet: %x%x%x%x\n", packet_addr->m_carMotionData[i].m_worldPositionX, packet_addr->m_carMotionData[i].m_worldPositionX, buffer[24*(i+1)], buffer[25*(i+1)], buffer[26*(i+1)], buffer[27*(i+1)]);
+    printf("struct: %f struct: %x struct: 0x%" PRIx32 " packet: %x%x%x%x addr: %p\n", 
+        packet_addr->m_carMotionData[i].m_worldPositionX, 
+        (unsigned int)packet_addr->m_carMotionData[i].m_worldPositionX, 
+        f2u.u, 
+        buffer[24*(i+1)], buffer[25*(i+1)], buffer[26*(i+1)], buffer[27*(i+1)], 
+        &packet_addr->m_carMotionData[i].m_worldPositionX
+    );
         std::cout << "World space Y position " << sizeof(packet_addr->m_carMotionData[i].m_worldPositionY) << "\n";
     printf("struct: %f struct: %f packet: %x%x%x%x\n", packet_addr->m_carMotionData[i].m_worldPositionY, packet_addr->m_carMotionData[i].m_worldPositionY, buffer[28*(i+1)], buffer[29*(i+1)], buffer[30*(i+1)], buffer[31*(i+1)]);
         std::cout << "World space Z position " << sizeof(packet_addr->m_carMotionData[i].m_worldPositionZ) << "\n";
@@ -93,8 +107,10 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
         std::cout << "FAILED TO STORE PACKET\n";
       }
       
-   std::cout << "------Marshall motion packet\n"; 
-      MotionMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor)); 
+   std::cout << "------Marshall motion packet-------------------------START\n"; 
+      unsigned int buffer_offset = 0;
+      MotionMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
+      std::cout << "---------------------------------------------------END\n";
       //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
       DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
       break;
