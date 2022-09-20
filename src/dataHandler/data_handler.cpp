@@ -4,6 +4,7 @@
 
 #include "constants.hpp"
 #include "data_handler.hpp"
+#include "packet_marshall.hpp"
 #include "header_packet.hpp"
 
 #include <stdio.h>
@@ -73,7 +74,7 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
       
    std::cout << "------Marshall motion packet-------------------------START\n"; 
       unsigned int buffer_offset = 0;
-      MotionMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
+      PacketMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
       std::cout << "---------------------------------------------------END\n";
       //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
       DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
