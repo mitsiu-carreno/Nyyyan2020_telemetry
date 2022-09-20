@@ -146,93 +146,6 @@ class MotionMarshall{
                 sizeof(MotionMarshall::car_motion_descriptor),
                 buffer_offset
             );
-    /*
-               for(int i = 0;i < 22;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionX));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionX);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionY));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionY);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionZ));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldPositionZ);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityX));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityX);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityY));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityY);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityZ));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityZ);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldVelocityX));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirX);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirY));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirY);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirZ));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldForwardDirZ);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirX));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirX);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirY));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirY);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirZ));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_worldRightDirZ);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLateral,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLateral));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLateral);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLongitudinal,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLongitudinal));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceLongitudinal);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceVertical,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceVertical));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_gForceVertical);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_yaw,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_yaw));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_yaw);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_pitch,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_pitch));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_pitch);
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_roll,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_roll));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_carMotionData[i].m_roll);
-    }
-    for(int i = 0;i < 4;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionPosition[i],&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionPosition[i]));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionPosition[i]);
-    }
-    for(int i = 0;i < 4;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionVelocity[i],&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionVelocity[i]));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionPosition[i]);
-    }
-    for(int i = 0;i < 4;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionAcceleration[i],&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionAcceleration[i]));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_suspensionAcceleration[i]);
-    }
-        for(int i = 0;i < 4;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSpeed[i],&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSpeed[i]));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSpeed[i]);
-    }
-    for(int i = 0;i < 4;i++)
-    {
-        memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSlip[i],&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSlip[i]));
-        buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_wheelSlip[i]);
-    }
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityX));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityX);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityY));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityY);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityZ));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_localVelocityZ);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityX));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityX);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityY));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityY);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityZ));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularVelocityZ);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationX,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationX));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationX);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationY,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationY));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationY);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationZ,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationZ));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_angularAccelerationZ);
-    memcpy(&(reinterpret_cast<PacketMotionData*>(struct_addr))->m_frontWheelsAngle,&buffer[buffer_offset],sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_frontWheelsAngle));
-    buffer_offset += sizeof((reinterpret_cast<PacketMotionData*>(struct_addr))->m_frontWheelsAngle); 
-    return;
-    */
           }else{
             unsigned int required_bytes = this->GetPropSize(packet_descriptor, packet_descriptor_size, prop_pos);
 
@@ -254,25 +167,6 @@ class MotionMarshall{
         }
       }
     }
-   /*
-   MotionMarshall(void *struct_addr, char *buffer, int buffer_offset=0){
-    for(short prop_pos {0}; prop_pos < this->GetTotalProps(); ++prop_pos){
-      short required_bytes = this->GetPropSize(prop_pos);
-      // TODO handle header better
-      if(prop_pos == 0){
-        HeaderMarshall(this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos), buffer);
-      }else{
-      
-        memcpy(
-          this->GetStructOffset(reinterpret_cast<char*>(struct_addr), prop_pos),
-          &buffer[buffer_offset],
-          required_bytes
-        );
-      }
-      buffer_offset += required_bytes;
-    }
-   }
-   */
 };
 
 #endif
