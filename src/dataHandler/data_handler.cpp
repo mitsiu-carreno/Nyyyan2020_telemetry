@@ -78,6 +78,8 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
       std::cout << "---------------------------------------------------END\n";
       //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
       DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+
+      delete reinterpret_cast<PacketMotionData*>(ptr_packet_data);
       break;
   } 
 }
