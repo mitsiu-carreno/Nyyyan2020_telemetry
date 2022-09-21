@@ -1,13 +1,16 @@
-/*
 const fs = require('fs');
 const es = require('event-stream');
 
 
+setTimeout(()=>{
+    
 var s = fs.createReadStream('../../test.csv')
   .pipe(es.split())
   .pipe(es.mapSync((line)=>{
       s.pause();
-      io.emit('data', line);
+      
+      console.log(line);
+      io.emit('chat message', line);
 
       s.resume(); 
     })
@@ -18,9 +21,8 @@ var s = fs.createReadStream('../../test.csv')
       console.log("Read entire file");
     })
   );
-  *
+    }, 5000);
 
-*/
 
 const express = require('express');
 const app = express();
@@ -38,6 +40,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
+
   socket.on('disconnect', ()=>{
     console.log("disconnect"); 
   });

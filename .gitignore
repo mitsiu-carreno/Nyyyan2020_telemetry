@@ -6,3 +6,5 @@
 !*/bin/.gitkeep
 */build/*
 !*/build/.gitkeep
+
+node_modules/

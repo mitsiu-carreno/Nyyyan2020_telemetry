@@ -80,18 +80,19 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
       //DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
       DataHandler::WritePacket(
           reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionX, 
-          reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY);
+          reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY,
+          reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionZ);
 
       delete reinterpret_cast<PacketMotionData*>(ptr_packet_data);
       break;
   } 
 }
 
-void DataHandler::WritePacket(float x, float y){
+void DataHandler::WritePacket(float x, float y, float z){
   
     std::ofstream write_file;
     write_file.open("test.csv", std::ofstream::app);
-    write_file << x << "," << y << "\n";
+    write_file << x << "," << y << "," << z << "\n";
     write_file.close();
 }
 
