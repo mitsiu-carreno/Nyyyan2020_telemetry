@@ -77,18 +77,21 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
       PacketMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
       std::cout << "---------------------------------------------------END\n";
       //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
-      DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+      //DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+      DataHandler::WritePacket(
+          reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionX, 
+          reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY);
 
       delete reinterpret_cast<PacketMotionData*>(ptr_packet_data);
       break;
   } 
 }
 
-void WritePacket(){
+void DataHandler::WritePacket(float x, float y){
   
     std::ofstream write_file;
-    write_file.open("test", std::ofstream::app);
-    //write_file << packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionX << "," << packet->m_carMotionData[packet->m_header.m_playerCarIndex].m_worldPositionY;
+    write_file.open("test.csv", std::ofstream::app);
+    write_file << x << "," << y << "\n";
     write_file.close();
 }
 
