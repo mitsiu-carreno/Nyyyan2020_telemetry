@@ -80,7 +80,7 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id, PositionData *data
 
       if(data->x.size() < 5000){
         data->x.push_back(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionX);
-        data->y.push_back(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY);
+        data->y.push_back(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionZ);
       }
       //DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
 
