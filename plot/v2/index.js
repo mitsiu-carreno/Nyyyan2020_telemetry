@@ -2,26 +2,35 @@ const fs = require('fs');
 const es = require('event-stream');
 
 
-setTimeout(()=>{
+//setTimeout(()=>{
     
-var s = fs.createReadStream('../../test.csv')
-  .pipe(es.split())
-  .pipe(es.mapSync((line)=>{
-      s.pause();
-      
-      console.log(line);
-      io.emit('chat message', line);
+//}, 5000);
 
-      s.resume(); 
-    })
-    .on('error', (err)=>{
-      console.log("Error while reading file", err);
-    })
-    .on('end', ()=>{
-      console.log("Read entire file");
+function ReadFile(){
+  
+  setTimeout(()=>{
+  var s = fs.createReadStream('../../test.csv')
+    .pipe(es.split())
+    .pipe(es.mapSync((line)=>{
+        s.pause();
+      
+        console.log(line);
+        setTimeout(()=>{
+            
+          io.emit('chat message', line);
+  
+          s.resume(); 
+        }, 50);
+      })
+      .on('error', (err)=>{
+        console.log("Error while reading file", err);
+      })
+      .on('end', ()=>{
+        console.log("Read entire file");
     })
   );
-    }, 5000);
+  },5000);
+}
 
 
 const express = require('express');
@@ -37,9 +46,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log("connect");
+
+  ReadFile();
+  /*
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
+  */
 
   socket.on('disconnect', ()=>{
     console.log("disconnect"); 
