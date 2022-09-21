@@ -6,6 +6,17 @@
 
 #include <vector>
 
+struct PositionData{
+  std::vector<float> x;
+  std::vector<float> y;
+  PositionData(){
+    this->x.reserve(5000);
+    this->y.reserve(5000);
+  }
+};
+
+void DrawPlot(PositionData*);
+
 class Plot{
   private:
     struct PositionData{

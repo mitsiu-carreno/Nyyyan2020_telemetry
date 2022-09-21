@@ -6,6 +6,7 @@
 #include "data_handler.hpp"
 #include "packet_marshall.hpp"
 #include "header_packet.hpp"
+#include "plot.hpp"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -62,7 +63,7 @@ void DataHandler::DebugMotion(char *buffer, PacketMotionData *packet_addr){
 
 }
 
-void DataHandler::MarshallPacket(char *buffer, int packet_id){
+void DataHandler::MarshallPacket(char *buffer, int packet_id, PositionData *data){
   void * ptr_packet_data = nullptr;
   switch(packet_id){
     case 0: 
@@ -72,12 +73,17 @@ void DataHandler::MarshallPacket(char *buffer, int packet_id){
         std::cout << "FAILED TO STORE PACKET\n";
       }
       
-   std::cout << "------Marshall motion packet-------------------------START\n"; 
+   //std::cout << "------Marshall motion packet-------------------------START\n"; 
       unsigned int buffer_offset = 0;
       PacketMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
-      std::cout << "---------------------------------------------------END\n";
-      //DataHandler::DebugHeader(buffer, reinterpret_cast<PacketHeader*>(&(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_header)));
-      DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+      //std::cout << "---------------------------------------------------END\n";
+
+      if(data->x.size() < 5000){
+        data->x.push_back(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionX);
+        data->y.push_back(reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY);
+      }
+      //DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+
 
       delete reinterpret_cast<PacketMotionData*>(ptr_packet_data);
       break;

@@ -4,7 +4,20 @@
 
 #include "plot.hpp"
 
+
 namespace plt = matplotlibcpp;
+
+void DrawPlot(PositionData *data){
+  int i {0};
+  while(i<2000){
+    plt::clf();
+    plt::plot(data->x, data->y);
+    plt::pause(1);
+    //sleep(0.3);
+    ++i;
+  }
+  plt::close(); 
+}
 
 void Plot::UpdatePosition(float pos_x, float pos_y){
   this->position_data.x.push_back(pos_x);

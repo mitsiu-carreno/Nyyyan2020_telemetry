@@ -8,9 +8,10 @@
 #include "constants.hpp"
 #include "data_handler.hpp"
 #include "socket.hpp"
+#include "plot.hpp"
 
 
-void sockethandler::ListenConnections(){
+void sockethandler::ListenConnections(PositionData *data){
     int sock_fd; 
     
     // Create unbound socket in the specified domain: man socket
@@ -74,7 +75,7 @@ void sockethandler::ListenConnections(){
       // echo "test" | nc -uw1 127.0.0.1 8088
       //std::cout << "Msg: " <<  std::hex << buffer << "\n";
       
-      DataHandler::MarshallPacket(buffer, static_cast<uint8>(buffer[DataHandler::kPacketIdPadding]));
+      DataHandler::MarshallPacket(buffer, static_cast<uint8>(buffer[DataHandler::kPacketIdPadding]), data);
 
     }
 
