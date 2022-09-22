@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nyyyyan</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script>
+
+      var socket = io();
+
+      window.onload = function(){
+        var dataPoints = [];
+
+        var chart = new CanvasJS.Chart("chartContainer",{
+          theme: "light2",
+          title: {
+            text: "Position"
+          },
+          data: [{
+            type: "line",
+            dataPoints: dataPoints
+          }]
+        });
+
+        chart.render();
+
+        // Socket
+        socket.on('chat message', function(msg) {
+          if(msg.length > 0){
+            console.log(msg);
+            let test = msg.split(",");
+            dataPoints.push({x: Number(test[0]), y:Number(test[2])})
+            chart.render();
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chartContainer" style="height: 900px; width: 900px;"></div>
+  </body>
+</html>
+
