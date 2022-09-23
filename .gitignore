@@ -2,11 +2,12 @@
 *.swp
 *.o
 
-*bin/*
-!*/bin/.gitkeep
-*/build/*
-!*/build/.gitkeep
+capture_data/bin/*
+!capture_data/bin/.gitkeep
+capture_data/build/*
+!capture_data/build/.gitkeep
+
+data/*
+!data/oliv_cursive.csv
 
 node_modules/
-*data/
-!*data/.gitkeep
