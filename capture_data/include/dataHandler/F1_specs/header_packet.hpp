@@ -1,10 +1,7 @@
 #ifndef F1_PACKET_HEADER_H
 #define F1_PACKET_HEADER_H
 
-#include <vector>
-#include <cstring>
-#include <iostream>
-#include "F1_types_alias.hpp"
+#include "type_alias_F1.hpp"
 
 struct PacketHeader
 {

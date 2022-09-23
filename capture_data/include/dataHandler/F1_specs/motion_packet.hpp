@@ -1,7 +1,7 @@
 #ifndef F1_MOTION_PACKET_H
 #define F1_MOTION_PACKET_H
 
-#include "F1_types_alias.hpp"
+#include "type_alias_F1.hpp"
 #include "header_packet.hpp"
 
 struct CarMotionData

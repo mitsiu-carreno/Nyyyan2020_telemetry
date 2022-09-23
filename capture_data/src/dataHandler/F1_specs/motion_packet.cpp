@@ -2,7 +2,7 @@
 #include <cstddef>  // offsetof
 
 #include "motion_packet.hpp"
-#include "F1_types_alias.hpp"
+#include "type_alias_F1.hpp"
 
   // [0] = sizeof member attribute, [1] = struct offset to member attribute, [2] = sizeof one member attribute (identify arrays)
 unsigned int MotionMarshall::motion_descriptor [][4] = {
