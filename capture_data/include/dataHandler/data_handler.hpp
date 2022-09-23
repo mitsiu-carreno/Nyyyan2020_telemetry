@@ -15,7 +15,7 @@ namespace DataHandler{
 
   void DebugMotion(char *, PacketMotionData *);
   void MarshallPacket(char *, int);
-  void WritePacket(float, float, float);
+  void WritePacket(uint16, float, float);
 };
 
 #endif

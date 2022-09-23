@@ -12,7 +12,7 @@ const es = require('event-stream');
 
 const { exec } = require("child_process");
 
-const file_path = "../test.csv";
+const file_path = "../data/test.csv";
 
 var total_lines_read = 0;
 

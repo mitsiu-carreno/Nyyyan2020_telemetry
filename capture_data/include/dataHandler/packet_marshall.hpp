@@ -5,6 +5,7 @@
 #include "type_alias_F1.hpp"
 #include "motion_packet.hpp"
 #include "header_packet.hpp"
+#include "car_telemetry_packet.hpp"
 
 class PacketMarshall{
   private:
@@ -92,6 +93,20 @@ class PacketMarshall{
                 buffer, 
                 MotionMarshall::car_motion_descriptor, 
                 sizeof(MotionMarshall::car_motion_descriptor),
+                buffer_offset
+            );
+          }else if(this->GetPropType(packet_descriptor, packet_descriptor_size, prop_pos) == F1_types::kCarTelemetryData){
+            PacketMarshall(
+                this->GetStructOffset(
+                  packet_descriptor,
+                  packet_descriptor_size,
+                  reinterpret_cast<char*>(struct_addr),
+                  prop_pos,
+                  arr_pos
+                ),
+                buffer,
+                CarTelemetryMarshall::car_telemetry_descriptor,
+                sizeof(CarTelemetryMarshall::car_telemetry_descriptor),
                 buffer_offset
             );
           }else{

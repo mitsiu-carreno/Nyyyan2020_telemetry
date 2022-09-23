@@ -64,30 +64,49 @@ void DataHandler::DebugMotion(char *buffer, PacketMotionData *packet_addr){
 
 void DataHandler::MarshallPacket(char *buffer, int packet_id){
   void * ptr_packet_data = nullptr;
+  unsigned int buffer_offset = 0;
   switch(packet_id){
     case 0: 
       try{
         ptr_packet_data = new PacketMotionData;
       }catch(...){ // TODO catch actual exception
-        std::cout << "FAILED TO STORE PACKET\n";
+        std::cout << "FAILED TO STORE PACKET 0\n";
       }
       
    std::cout << "------Marshall motion packet-------------------------START\n"; 
-      unsigned int buffer_offset = 0;
       PacketMarshall(ptr_packet_data, buffer, MotionMarshall::motion_descriptor, sizeof(MotionMarshall::motion_descriptor), buffer_offset); 
       std::cout << "---------------------------------------------------END\n";
       //DataHandler::DebugMotion(buffer, reinterpret_cast<PacketMotionData*>(ptr_packet_data));
+      /*
       DataHandler::WritePacket(
           reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionX, 
           reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionY,
           reinterpret_cast<PacketMotionData*>(ptr_packet_data)->m_carMotionData[0].m_worldPositionZ);
-
+      */
       delete reinterpret_cast<PacketMotionData*>(ptr_packet_data);
+      break;
+    case 6:
+      try{
+        ptr_packet_data = new PacketCarTelemetryData;
+      }catch(...){
+        std::cout << "FAILED TO STORE PACKET 6\n";
+      }
+   std::cout << "------Car telemetry packet-------------------------START\n"; 
+      PacketMarshall(ptr_packet_data, buffer, CarTelemetryMarshall::car_telemetry_packet_descriptor, sizeof(CarTelemetryMarshall::car_telemetry_packet_descriptor), buffer_offset);
+      std::cout << "---------------------------------------------------END\n";
+
+      DataHandler::WritePacket(
+        reinterpret_cast<PacketCarTelemetryData*>(ptr_packet_data)->m_carTelemetryData[0].m_speed,
+        0,
+        reinterpret_cast<PacketCarTelemetryData*>(ptr_packet_data)->m_header.m_sessionTime
+      );
+      
+      delete reinterpret_cast<PacketCarTelemetryData*>(ptr_packet_data);
       break;
   } 
 }
 
-void DataHandler::WritePacket(float x, float y, float z){
+void DataHandler::WritePacket(uint16 x, float y, float z){
 
     std::string file_name = "test.csv"; 
     std::string file_path = constants::kDataDirectory + file_name;
