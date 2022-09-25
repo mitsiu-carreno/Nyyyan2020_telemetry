@@ -3,12 +3,25 @@
 #include "data_handler.hpp"
 #include "type_alias_F1.hpp"
 #include "constants.hpp"
+#include "header_packet.hpp"
+#include "lap_packet.hpp"
+
+
+void DataHandler::DebugLap(PacketLapData data){
+  printf("m_lastLapTime %f\n", data.m_lapData[0].m_lastLapTime);
+  printf("m_lapDistance %f\n", data.m_lapData[0].m_lapDistance);
+  printf("m_totalDistance %f\n", data.m_lapData[0].m_totalDistance);
+}
 
 void DataHandler::ProcessBuffer(char *buffer, int packet_id){
   switch(packet_id){
     case 0:
       break;
     case 2:
+      PacketLapData data; // TODO change to pointer??
+      MarshallLap(buffer, &data.m_lapData[0], MarshallHeader(buffer, &data.m_header));
+      
+      DataHandler::DebugLap(data);
       break;
   }
 }

@@ -4,6 +4,8 @@
 #include "type_alias_F1.hpp"
 #include "header_packet.hpp"
 
+#include "lap_packet.hpp"
+
 namespace DataHandler{
   
   inline const short kPacketIdPadding = 
@@ -12,6 +14,7 @@ namespace DataHandler{
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMinorVersion)
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetVersion);
 
+  void DebugLap(PacketLapData);
   void ProcessBuffer(char*, int);
   void WritePacket(uint64, uint8, float, float, float);
 };

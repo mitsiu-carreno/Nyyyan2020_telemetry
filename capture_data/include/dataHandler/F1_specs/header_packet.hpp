@@ -1,6 +1,7 @@
 #ifndef F1_PACKET_HEADER_H
 #define F1_PACKET_HEADER_H
 
+#include <cstring>
 #include "type_alias_F1.hpp"
 
 struct PacketHeader
@@ -20,4 +21,6 @@ struct PacketHeader
                                           // 255 if no second player
 };
 
+
+unsigned int MarshallHeader(char *buffer, PacketHeader *struct_addr, unsigned int buffer_offset = 0);
 #endif

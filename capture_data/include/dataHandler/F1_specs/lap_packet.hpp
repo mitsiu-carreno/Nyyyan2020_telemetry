@@ -52,4 +52,6 @@ struct PacketLapData
     LapData         m_lapData[22];        // Lap data for all cars on track
 };
 
+void MarshallLap(char *buffer, LapData *struct_addr, unsigned int buffer_offset);
+
 #endif
