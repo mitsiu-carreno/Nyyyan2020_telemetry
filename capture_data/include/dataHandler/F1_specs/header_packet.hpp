@@ -14,17 +14,10 @@ struct PacketHeader
     float     m_sessionTime;              // Session timestamp
     uint32    m_frameIdentifier;          // Identifier for the frame the data was retrieved on
     uint8     m_playerCarIndex;           // Index of player's car in the array
-
-   // ADDED IN BETA 2:
+    
+   // ADDED IN BETA 2: 
     uint8     m_secondaryPlayerCarIndex;  // Index of secondary player's car in the array (splitscreen)
                                           // 255 if no second player
 };
-
-class HeaderMarshall{
-  public:
-    //static std::vector<std::pair<short, short>> header_descriptor;
-    static unsigned int header_descriptor [10][4];
-};
-
 
 #endif

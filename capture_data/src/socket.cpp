@@ -4,7 +4,6 @@
 #include <cstring>      // memset
 #include <iostream>
 
-#include "type_alias_F1.hpp"
 #include "constants.hpp"
 #include "data_handler.hpp"
 #include "socket.hpp"
@@ -74,7 +73,7 @@ void sockethandler::ListenConnections(){
       // echo "test" | nc -uw1 127.0.0.1 8088
       //std::cout << "Msg: " <<  std::hex << buffer << "\n";
       
-      DataHandler::MarshallPacket(buffer, static_cast<uint8>(buffer[DataHandler::kPacketIdPadding]));
+      DataHandler::ProcessBuffer(buffer, static_cast<uint8>(buffer[DataHandler::kPacketIdPadding]));
 
     }
 

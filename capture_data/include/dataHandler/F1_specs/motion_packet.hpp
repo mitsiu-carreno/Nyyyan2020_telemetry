@@ -5,7 +5,7 @@
 #include "header_packet.hpp"
 
 struct CarMotionData
-  {
+{
     float         m_worldPositionX;           // World space X position
     float         m_worldPositionY;           // World space Y position
     float         m_worldPositionZ;           // World space Z position
@@ -48,13 +48,6 @@ struct PacketMotionData
     float         m_angularAccelerationY;	    // Angular velocity y-component
     float         m_angularAccelerationZ;       // Angular velocity z-component
     float         m_frontWheelsAngle;           // Current front wheels angle in radians
-};
-
-class MotionMarshall{
-  public:
-    static unsigned int motion_descriptor [17][4];
-    static unsigned int car_motion_descriptor [18][4];
-  
 };
 
 #endif

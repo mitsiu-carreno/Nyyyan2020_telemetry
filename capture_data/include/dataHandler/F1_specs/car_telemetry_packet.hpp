@@ -42,10 +42,4 @@ struct PacketCarTelemetryData
                                                // 0 if no gear suggested
 };
 
-class CarTelemetryMarshall{
-  public:
-    static unsigned int car_telemetry_packet_descriptor [6][4];
-    static unsigned int car_telemetry_descriptor [15][4];
-};
-
 #endif

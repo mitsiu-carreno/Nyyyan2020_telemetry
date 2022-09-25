@@ -1,5 +1,6 @@
 #include "socket.hpp"
-#include <iostream>
+
+// TODO pool thread
 
 int main(){
 
