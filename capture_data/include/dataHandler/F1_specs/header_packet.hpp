@@ -1,8 +1,8 @@
 #ifndef F1_PACKET_HEADER_H
 #define F1_PACKET_HEADER_H
 
-#include <cstring>
 #include "type_alias_F1.hpp"
+
 
 struct PacketHeader
 {
@@ -20,7 +20,6 @@ struct PacketHeader
     uint8     m_secondaryPlayerCarIndex;  // Index of secondary player's car in the array (splitscreen)
                                           // 255 if no second player
 };
-
 
 unsigned int MarshallHeader(char *buffer, PacketHeader *struct_addr, unsigned int buffer_offset = 0);
 #endif

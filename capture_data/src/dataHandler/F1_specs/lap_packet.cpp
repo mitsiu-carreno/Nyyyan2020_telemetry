@@ -1,7 +1,7 @@
 #include <cstring>
 #include "lap_packet.hpp"
 
-void MarshallLap(char *buffer, LapData *struct_addr, unsigned int buffer_offset){
+void MarshallLap(char *buffer, LapData *struct_addr, unsigned int &buffer_offset){
   memcpy(&struct_addr->m_lastLapTime, &buffer[buffer_offset], sizeof(struct_addr->m_lastLapTime));
   buffer_offset += sizeof(struct_addr->m_lastLapTime);
 
@@ -82,5 +82,13 @@ void MarshallLap(char *buffer, LapData *struct_addr, unsigned int buffer_offset)
 
   memcpy(&struct_addr->m_resultStatus, &buffer[buffer_offset], sizeof(struct_addr->m_resultStatus));
   buffer_offset += sizeof(struct_addr->m_resultStatus);
+}
 
+void MarshallLapPacket(char *buffer, PacketLapData *struct_addr){
+  unsigned int buffer_offset = MarshallHeader(buffer, &struct_addr->m_header);
+
+  for(unsigned int i{0}; i<lap_packet_array_descriptor.at("m_lapData"); ++i){
+    MarshallLap(buffer, &struct_addr->m_lapData[i], buffer_offset);
+  }
+  
 }

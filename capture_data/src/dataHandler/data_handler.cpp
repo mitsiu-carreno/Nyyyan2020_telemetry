@@ -7,21 +7,19 @@
 #include "lap_packet.hpp"
 
 
-void DataHandler::DebugLap(PacketLapData data){
-  printf("m_lastLapTime %f\n", data.m_lapData[0].m_lastLapTime);
-  printf("m_lapDistance %f\n", data.m_lapData[0].m_lapDistance);
-  printf("m_totalDistance %f\n", data.m_lapData[0].m_totalDistance);
+void DataHandler::DebugLap(PacketLapData *data){
+  printf("m_currentLapTime %f\n", data->m_lapData[data->m_header.m_playerCarIndex].m_currentLapTime);
+  printf("m_lapDistance %f\n",    data->m_lapData[data->m_header.m_playerCarIndex].m_lapDistance);
+  printf("m_currentLapNum %u\n",  data->m_lapData[data->m_header.m_playerCarIndex].m_currentLapNum);
 }
 
 void DataHandler::ProcessBuffer(char *buffer, int packet_id){
   switch(packet_id){
-    case 0:
-      break;
     case 2:
       PacketLapData data; // TODO change to pointer??
-      MarshallLap(buffer, &data.m_lapData[0], MarshallHeader(buffer, &data.m_header));
+      MarshallLapPacket(buffer, &data);
       
-      DataHandler::DebugLap(data);
+      DataHandler::DebugLap(&data);
       break;
   }
 }

@@ -1,6 +1,8 @@
 #ifndef F1_LAP_H
 #define F1_LAP_H
 
+#include <unordered_map>
+#include <string>
 #include "type_alias_F1.hpp"
 #include "header_packet.hpp"
 
@@ -52,6 +54,10 @@ struct PacketLapData
     LapData         m_lapData[22];        // Lap data for all cars on track
 };
 
-void MarshallLap(char *buffer, LapData *struct_addr, unsigned int buffer_offset);
+const std::unordered_map<std::string, unsigned int> lap_packet_array_descriptor = {
+  {"m_lapData", 22},
+};
+
+void MarshallLapPacket(char *, PacketLapData*);
 
 #endif

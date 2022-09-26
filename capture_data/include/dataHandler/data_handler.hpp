@@ -14,7 +14,7 @@ namespace DataHandler{
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_gameMinorVersion)
     + sizeof(reinterpret_cast<struct PacketHeader*>(0)->m_packetVersion);
 
-  void DebugLap(PacketLapData);
+  void DebugLap(PacketLapData*);
   void ProcessBuffer(char*, int);
   void WritePacket(uint64, uint8, float, float, float);
 };
