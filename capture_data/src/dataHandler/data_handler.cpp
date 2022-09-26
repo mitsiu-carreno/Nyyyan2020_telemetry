@@ -7,6 +7,13 @@
 #include "lap_packet.hpp"
 
 
+void DataHandler::DebugCarTelemetry(PacketCarTelemetryData *data){
+  printf("m_speed %u\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_speed);
+  printf("m_throttle %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_throttle);
+  printf("m_steer %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_steer);
+  printf("m_brake %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_brake);
+}
+
 void DataHandler::DebugLap(PacketLapData *data){
   printf("m_currentLapTime %f\n", data->m_lapData[data->m_header.m_playerCarIndex].m_currentLapTime);
   printf("m_lapDistance %f\n",    data->m_lapData[data->m_header.m_playerCarIndex].m_lapDistance);
@@ -20,6 +27,12 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
       MarshallLapPacket(buffer, &data);
       
       DataHandler::DebugLap(&data);
+      break;
+    case 6:
+      PacketCarTelemetryData data2;
+      MarshallCarTelemetryPacket(buffer, &data2);
+
+      DataHandler::DebugCarTelemetry(&data2);
       break;
   }
 }

@@ -1,6 +1,8 @@
 #ifndef F1_CAR_TELEM_H
 #define F1_CAR_TELEM_H
 
+#include <unordered_map>
+#include <string>
 #include "type_alias_F1.hpp"
 #include "header_packet.hpp"
 
@@ -41,5 +43,19 @@ struct PacketCarTelemetryData
     int8                m_suggestedGear;       // Suggested gear for the player (1-8)
                                                // 0 if no gear suggested
 };
+
+const std::unordered_map<std::string, unsigned int> car_telemetry_packet_array_descriptor = {
+  {"m_carTelemetryData", 22}
+};
+
+const std::unordered_map<std::string, unsigned int> car_telemetry_array_descriptor = {
+  {"m_brakesTemperature", 4},
+  {"m_tyresSurfaceTemperature", 4},
+  {"m_tyresInnerTemperature", 4},
+  {"m_tyresPressure", 4},
+  {"m_surfaceType", 4}
+};
+
+void MarshallCarTelemetryPacket(char *, PacketCarTelemetryData*);
 
 #endif
