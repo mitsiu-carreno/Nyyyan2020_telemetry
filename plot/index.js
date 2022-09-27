@@ -20,11 +20,11 @@ setInterval(()=>{
 
   GetLastFile();
 
-}, 500);
+}, 5000);
 
 function GetLastFile(){
   var file_name = "";
-  exec("ls ../data/ | tail -n 1", (error, stdout, stderr)=>{
+  exec("ls -p ../data/ | grep -v / | tail -n 1", (error, stdout, stderr)=>{
      if(error){
       console.log("Error while checking last lap csv", error);
       return;

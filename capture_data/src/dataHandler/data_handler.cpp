@@ -30,6 +30,7 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
       if(data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance >= 0){
         internal_lap_num = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapNum;
         DataHandler::WritePacket(
+          0,
           internal_lap_num,
           data.m_header.m_sessionTime,
           data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapTime,
@@ -46,6 +47,7 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
 
       if(internal_lap_num != 0){
         DataHandler::WritePacket(
+          1,
           internal_lap_num,
           data2.m_header.m_sessionTime,
           0,0,
@@ -61,7 +63,7 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
   }
 }
 
-void DataHandler::WritePacket(uint8 internal_lap_num, float session_time, float current_lap_time, float lap_distance, uint16 speed, float throttle, float steer, float brake){
+void DataHandler::WritePacket(bool car_tel, uint8 internal_lap_num, float session_time, float current_lap_time, float lap_distance, uint16 speed, float throttle, float steer, float brake){
 
     std::string file_name = "lap" + std::to_string(internal_lap_num) + ".csv"; 
     //std::string file_path = constants::kDataDirectory + "/\0" + std::to_string(session_id) + "/\0" + file_name;
@@ -71,7 +73,7 @@ void DataHandler::WritePacket(uint8 internal_lap_num, float session_time, float 
 
     std::ofstream write_file;
     write_file.open(file_path, std::ofstream::app);
-    write_file << session_time << "," << current_lap_time << "," << lap_distance << "," << speed << "," << throttle << "," << steer << "," << brake <<  "\n";
+    write_file << car_tel << "," << session_time << "," << current_lap_time << "," << lap_distance << "," << speed << "," << throttle << "," << steer << "," << brake <<  "\n";
     write_file.close();
 }
 

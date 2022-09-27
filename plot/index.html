@@ -16,7 +16,7 @@
         var chart = new CanvasJS.Chart("chartContainer",{
           theme: "light2",
           title: {
-            text: "Position"
+            text: "Acelerador"
           },
           data: [{
             type: "line",
@@ -31,15 +31,19 @@
           if(msg.length > 0){
             console.log(msg);
             let test = msg.split(",");
-            dataPoints.push({x: Number(test[0]), y:Number(test[2])})
-            chart.render();
+            if(Number(test[0])){
+              console.log("ploting ", Number(test[5]));
+              console.log(test);
+              dataPoints.push({x: Number(test[1]), y:Number(test[5])})
+              chart.render();
+            }
           }
         });
       }
     </script>
   </head>
   <body>
-    <div id="chartContainer" style="height: 900px; width: 900px;"></div>
+    <div id="chartContainer" style="height: 200px; width: 100%;"></div>
   </body>
 </html>
 
