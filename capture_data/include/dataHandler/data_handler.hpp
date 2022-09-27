@@ -18,7 +18,7 @@ namespace DataHandler{
   void DebugCarTelemetry(PacketCarTelemetryData*);
   void DebugLap(PacketLapData*);
   void ProcessBuffer(char*, int);
-  void WritePacket(uint64, uint8, float, float, float);
+  void WritePacket(uint8, float, float, float, uint16, float, float, float);
 };
 
 #endif
