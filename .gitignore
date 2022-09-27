@@ -8,6 +8,6 @@ capture_data/build/*
 !capture_data/build/.gitkeep
 
 data/*
-!data/oliv_cursive.csv
+!data/cursive_oliv.csv
 
 node_modules/

@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -7,18 +5,43 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+app.use(express.static('public'));
+
 const fs = require('fs');
 const es = require('event-stream');
 
 const { exec } = require("child_process");
 
-const file_path = "../data/test.csv";
+const folder_path = "../data/";
 
 var total_lines_read = 0;
 
 setInterval(()=>{
 
-  exec("wc -l " + file_path + " | cut -d \" \" -f1", (error, stdout, stderr)=>{
+  GetLastFile();
+
+}, 500);
+
+function GetLastFile(){
+  var file_name = "";
+  exec("ls ../data/ | tail -n 1", (error, stdout, stderr)=>{
+     if(error){
+      console.log("Error while checking last lap csv", error);
+      return;
+     } 
+     if(stderr){
+      console.log("Stderr while checking last lap csv", stderr);
+      return;
+     }
+     file_name = stdout.replace("\n", "");
+     console.log(file_name);
+     //file_name = stdout;
+     CheckFileLenght(file_name)
+  });
+}
+
+function CheckFileLenght(file_name){
+  exec("wc -l " + folder_path + file_name + " | cut -d \" \" -f1", (error, stdout, stderr)=>{
     if(error){
       console.log("Error while checking data length", error);
       return;
@@ -27,18 +50,17 @@ setInterval(()=>{
       console.log("Stderr while checking data length", stderr);
       return;
     }
-    //console.log(stdout);
+    console.log(stdout);
     if(Number(stdout) > total_lines_read){
-      ReadFile(Number());
+      ReadFile(folder_path + file_name);
     }
   })
-}, 500);
+}
 
-
-function ReadFile(){
+function ReadFile(file){
   let current_lines_read = 0;
   try{
-  var s = fs.createReadStream(file_path)
+  var s = fs.createReadStream(file)
     .pipe(es.split())
     .pipe(es.mapSync((line)=>{
         if(current_lines_read > total_lines_read){
