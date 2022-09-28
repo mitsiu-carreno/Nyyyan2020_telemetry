@@ -27,13 +27,19 @@
         chart.render();
 
         // Socket
-        socket.on('chat message', function(msg) {
-          if(msg.length > 0){
-            console.log(msg);
-            let test = msg.split(",");
+        socket.on('new_data', function(type, data) {
+          console.log("received");
+          if(type == "new_lap"){
+            console.log("CLEAR")
+            dataPoints.length = 0;
+            //dataPoints.splice(0, dataPoints.length);
+            chart.render();
+          }
+          if(type == "plot_data" && data.length > 0){
+            //console.log(data);
+            let test = data.split(",");
             if(Number(test[0])){
-              console.log("ploting ", Number(test[5]));
-              console.log(test);
+              //console.log("ploting ", Number(test[1]), Number(test[5]));
               dataPoints.push({x: Number(test[1]), y:Number(test[5])})
               chart.render();
             }

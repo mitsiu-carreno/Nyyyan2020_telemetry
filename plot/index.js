@@ -15,6 +15,7 @@ const { exec } = require("child_process");
 const folder_path = "../data/";
 
 var total_lines_read = 0;
+var file_name = "";
 
 setInterval(()=>{
 
@@ -23,24 +24,28 @@ setInterval(()=>{
 }, 5000);
 
 function GetLastFile(){
-  var file_name = "";
   exec("ls -p ../data/ | grep -v / | tail -n 1", (error, stdout, stderr)=>{
-     if(error){
+    if(error){
       console.log("Error while checking last lap csv", error);
       return;
-     } 
-     if(stderr){
+    } 
+    if(stderr){
       console.log("Stderr while checking last lap csv", stderr);
       return;
-     }
-     file_name = stdout.replace("\n", "");
-     console.log(file_name);
-     //file_name = stdout;
-     CheckFileLenght(file_name)
+    }
+    if(file_name != stdout.replace("\n", "")){
+      file_name = stdout.replace("\n", "");
+      total_lines_read = 0;
+     
+      console.log("CLEAR");
+      io.emit('new_data', 'new_lap', true);  
+    
+    }
+    CheckFileLenght();
   });
 }
 
-function CheckFileLenght(file_name){
+function CheckFileLenght(){
   exec("wc -l " + folder_path + file_name + " | cut -d \" \" -f1", (error, stdout, stderr)=>{
     if(error){
       console.log("Error while checking data length", error);
@@ -68,13 +73,11 @@ function ReadFile(file){
           s.pause();
       
           console.log(line);
-          setTimeout(()=>{
             
-            io.emit('chat message', line);
+          io.emit('new_data', "plot_data", line);
             
-            total_lines_read++; 
-            s.resume(); 
-          }, 50);
+          total_lines_read++; 
+          s.resume(); 
         }
         current_lines_read++;
 
@@ -97,14 +100,6 @@ app.get('/', (req, res) => {
 
 io.on('connection', async(socket) => {
   console.log("connect");
-
-  //ReadFile();
-  //console.log("Other line--------");
-  /*
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-  */
 
   socket.on('disconnect', ()=>{
     console.log("disconnect"); 
