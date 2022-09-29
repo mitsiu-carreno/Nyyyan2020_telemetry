@@ -11,112 +11,186 @@
       var socket = io();
 
       window.onload = function(){
-        var lap_data = [];
-        var benchmark_data = [];
+
+        var dashboard = [];
+
+        var lap_data = {
+          speed: [],
+          throttle: [],
+          steer: [],
+          brake: []
+        };
+
+        var benchmark_data = {
+          speed: [],
+          throttle: [],
+          steer: [],
+          brake: []
+        };
+
         var lap_time_offset = null;
         var benchmark_time_offset = null;
 
-        var chart = new CanvasJS.Chart("chartContainer",{
-          zoomEnabled: true,
-          theme: "light2",
+        // Graph commons
+        const graph_theme = "light2";
+        const graph_colors = {
+          prof: "#062d35",
+          rookie: "#1397b5",
+        };
+        const graph_toolTip = {
+          shared: true,
+        };
+        const graph_legend = {
+          cursor: "pointer",
+          verticalAlign: "top",
+          fontSize: 20, 
+          itemclick : (e)=>{
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+              e.dataSeries.visible = false;
+            } else {
+              e.dataSeries.visible = true;
+            }
+          e.chart.render();
+          }
+        };
+
+        var speedGraph = {
+          theme: graph_theme,
+          title: {
+            text: "Velocidad"
+          },
+          axisY: {
+            //valueFormatString: "#0.#%"
+          },
+          legend: graph_legend,
+          data:[
+            {
+              type: "line",
+              showInLegend: true,
+              name: "MACS",
+              //yValueFormatString: "#0.#%",
+              color: graph_colors.prof,
+              dataPoints: benchmark_data.speed
+            },
+            {
+              type: "line",
+              showInLegend: true,
+              name: "ROOKIE",
+              yValueFormatString: "#0.#%",
+              color: graph_colors.rookie,
+              dataPoints: lap_data.speed
+            }
+          ]
+
+        };
+
+        var throttleGraph = {
+          theme: graph_theme,
           title: {
             text: "Acelerador"
           },
-          legend: {
-		        cursor:"pointer",
-		        verticalAlign: "top",
-		        fontSize: 22,
-		        fontColor: "dimGrey",
-		        itemclick : toggleDataSeries
-  	      },
-          toolTip: {
-		        shared: true
-	        },
-          data: [{
-            type: "line",
-            showInLegend: true,
-		        name: "Contender",
-            dataPoints: lap_data
-          },{
-            type: "line",
-            showInLegend: true,
-            name: "Champ",
-            dataPoints: benchmark_data
-          }]
-        });
+          axisY: {
+            valueFormatString: "#0.#%"
+          },
+          legend: graph_legend,
+          data:[
+            {
+              type: "line",
+              showInLegend: true,
+              name: "MACS",
+              yValueFormatString: "#0.#%",
+              color: graph_colors.prof,
+              dataPoints: benchmark_data.throttle
+            },
+            {
+              type: "line",
+              showInLegend: true,
+              name: "ROOKIE",
+              yValueFormatString: "#0.#%",
+              color: graph_colors.rookie,
+              dataPoints: lap_data.throttle
+            }
+          ]
 
-        chart.render();
+        };
+
+
+        dashboard.push(new CanvasJS.Chart("speedGraphContainer", speedGraph));
+        dashboard.push(new CanvasJS.Chart("throttleGraphContainer", throttleGraph));
+
+        RenderGraphs();
+
+        function RenderGraphs(){
+          for( var i = 0; i < dashboard.length; i++){
+            dashboard[i].render();
+          }
+        }
+        
+        function ResetGraph(benchmark){
+          if(benchmark){
+            for(let attr in benchmark_data){
+              benchmark_data[attr].length = 0;
+            }
+            benchmark_time_offset = null;
+          }else{
+            for(let attr in lap_data){
+              lap_data[attr].length = 0;
+            }
+            lap_time_offset = null;
+          }
+
+          RenderGraphs();
+        }
+
+        //function SyncGraphs()
 
         // Socket
         socket.on('new_data', function(type, benchmark, data) {
-          //console.log("received");
-          //console.log(type, benchmark);
+          //console.log("received", type, benchmark, data);
+          //console.log(benchmark_time_offset, lap_time_offset);
           if(type == "new_lap"){
-            //console.log("CLEAR")
-            if(benchmark.benchmark){
-              benchmark_data.length = 0;
-              benchmark_time_offset = null;  
-            }else{
-              lap_data.length = 0;
-              lap_time_offset = null;
-            }
-            
-            //lap_data.splice(0, lap_data.length);
-            chart.render();
+            ResetGraph(benchmark); 
+            chart.render();   // TODO update
           }
           if(type == "plot_data" && data.length > 0){
-            //console.log(1);
-            let test = data.split(",");
-            if(Number(test[0]) == 1){  // Car_telemetry
-              //console.log("ploting ", Number(test[1]), Number(test[5]));
-              if(benchmark){
-                benchmark_data.push(
-                    {
-                      x: Number(test[1]) - benchmark_time_offset, 
-                      y:Number(test[5])
-                    }
-                );
-              }else{
-                lap_data.push(
-                    {
-                      x: Number(test[1]) - lap_time_offset, 
-                      y:Number(test[5])
-                    }
-                );
+            let parsed_data = data.split(",");
+            if(Number(parsed_data[0]) == 1){  // Car_telemetry
+
+              if(benchmark && benchmark_time_offset != null){
+                let lap_time = Number(parsed_data[1]) - benchmark_time_offset;
+                benchmark_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
+                benchmark_data.throttle.push({x: lap_time, y:Number(parsed_data[5])});
+
+              }else if(!benchmark && lap_time_offset != null){
+                let lap_time = Number(parsed_data[1]) - lap_time_offset;
+                lap_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
+                lap_data.throttle.push({x: lap_time, y: Number(parsed_data[5])});
               }
-              chart.render();
-            }else if(Number(test[0]) == 0){ // Lap_data
+              //chart.render();
+            }else if(Number(parsed_data[0]) == 0){ // Lap_data
+
               if(benchmark){
                 if(benchmark_time_offset == null){ 
-                  benchmark_time_offset = Number(test[1]) - Number(test[2]);
-                  //console.log("benchmark_time_offset", benchmark_time_offset);
+                  benchmark_time_offset = Number(parsed_data[1]) - Number(parsed_data[2]);
                 }
 
               }else{
                 if(lap_time_offset == null){
-                  lap_time_offset = Number(test[1]) -Number(test[2]);
-                  //console.log("lap_time_offset", lap_time_offset);
+                  lap_time_offset = Number(parsed_data[1]) -Number(parsed_data[2]);
                 }
 
               }
             }
+            RenderGraphs();
           }
         });
 
-        function toggleDataSeries(e) {
-	        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-		        e.dataSeries.visible = false;
-	        }
-	        else {
-		        e.dataSeries.visible = true;
-	        }
-	        chart.render();
-        }
       }
     </script>
   </head>
   <body>
-    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <div id="speedGraphContainer" style="height: 300px; width: 100%;"></div>
+    <div id="throttleGraphContainer" style="height: 300px; width: 100%;"></div>
   </body>
 </html>
 

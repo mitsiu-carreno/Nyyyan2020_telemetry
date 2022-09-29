@@ -22,7 +22,7 @@ setInterval(()=>{
 
   GetLastFile();
 
-}, 10000);
+}, 100);
 
 function GetLastFile(){
   exec("ls -p ../data/ | grep -v / | tail -n 1", (error, stdout, stderr)=>{
@@ -34,7 +34,7 @@ function GetLastFile(){
       console.log("Stderr while checking last lap csv", stderr);
       return;
     }
-    if(file_name != stdout.replace("\n", "")){
+    if(file_name != stdout.replace("\n", "")){   // New file detected
       file_name = stdout.replace("\n", "");
       total_lines_read = 0;
      
@@ -58,27 +58,28 @@ function CheckFileLenght(){
     }
     console.log(stdout);
     if(Number(stdout) > total_lines_read){
-      ReadFile(folder_path + file_name, false);
+      ReadFile(folder_path + file_name);
     }
   })
 }
 
-function ReadFile(file, benchmark){
+function ReadFile(file){
   let current_lines_read = 0;
   try{
   var s = fs.createReadStream(file)
     .pipe(es.split())
     .pipe(es.mapSync((line)=>{
-        if(current_lines_read > total_lines_read || benchmark){
+        // Decide whether or not to emit line read
+        if(current_lines_read > total_lines_read){
           
           s.pause();
-      
-          console.log(line);
-            
-          io.emit('new_data', "plot_data", benchmark, line);
-            
+          //console.log(line);
+          let is_benchmark = file_name == benchmark_file_name ? true : false; 
+          io.emit('new_data', "plot_data", is_benchmark, line);
+
           total_lines_read++; 
           s.resume(); 
+            
         }
         current_lines_read++;
 
@@ -101,8 +102,12 @@ app.get('/', (req, res) => {
 
 io.on('connection', async(socket) => {
   console.log("connect");
+  /*
+setTimeout(()=>{
+   ReadFile(folder_path + benchmark_file_name, true, socket.id);   
+}, 2000);
+*/
 
-  ReadFile(folder_path + benchmark_file_name, true);
   socket.on('disconnect', ()=>{
     console.log("disconnect"); 
   });

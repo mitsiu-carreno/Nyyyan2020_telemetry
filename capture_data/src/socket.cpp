@@ -68,7 +68,7 @@ void sockethandler::ListenConnections(){
         throw "No data received";
       }
       buffer[bytes_in] = '\0';
-      std::cout << bytes_in << " bytes received\n";
+      //std::cout << bytes_in << " bytes received\n";
 
       // echo "test" | nc -uw1 127.0.0.1 8088
       //std::cout << "Msg: " <<  std::hex << buffer << "\n";

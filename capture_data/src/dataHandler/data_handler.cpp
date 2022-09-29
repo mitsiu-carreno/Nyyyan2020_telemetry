@@ -22,12 +22,15 @@ void DataHandler::DebugLap(PacketLapData *data){
 
 void DataHandler::ProcessBuffer(char *buffer, int packet_id){
   static uint8 internal_lap_num = 0;
+  static bool writting = false;
   switch(packet_id){
     case 2:
       PacketLapData data; // TODO change to pointer??
       MarshallLapPacket(buffer, &data);
 
-      if(data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance >= 0){
+      if(data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance >= 1 
+          && data.m_header.m_sessionTime > 1){
+        writting = true;
         internal_lap_num = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapNum;
         DataHandler::WritePacket(
           0,
@@ -45,7 +48,7 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
       PacketCarTelemetryData data2;
       MarshallCarTelemetryPacket(buffer, &data2);
 
-      if(internal_lap_num != 0){
+      if(internal_lap_num != 0 && writting){
         DataHandler::WritePacket(
           1,
           internal_lap_num,
