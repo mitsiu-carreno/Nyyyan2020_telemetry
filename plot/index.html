@@ -11,45 +11,112 @@
       var socket = io();
 
       window.onload = function(){
-        var dataPoints = [];
+        var lap_data = [];
+        var benchmark_data = [];
+        var lap_time_offset = null;
+        var benchmark_time_offset = null;
 
         var chart = new CanvasJS.Chart("chartContainer",{
+          zoomEnabled: true,
           theme: "light2",
           title: {
             text: "Acelerador"
           },
+          legend: {
+		        cursor:"pointer",
+		        verticalAlign: "top",
+		        fontSize: 22,
+		        fontColor: "dimGrey",
+		        itemclick : toggleDataSeries
+  	      },
+          toolTip: {
+		        shared: true
+	        },
           data: [{
             type: "line",
-            dataPoints: dataPoints
+            showInLegend: true,
+		        name: "Contender",
+            dataPoints: lap_data
+          },{
+            type: "line",
+            showInLegend: true,
+            name: "Champ",
+            dataPoints: benchmark_data
           }]
         });
 
         chart.render();
 
         // Socket
-        socket.on('new_data', function(type, data) {
-          console.log("received");
+        socket.on('new_data', function(type, benchmark, data) {
+          //console.log("received");
+          //console.log(type, benchmark);
           if(type == "new_lap"){
-            console.log("CLEAR")
-            dataPoints.length = 0;
-            //dataPoints.splice(0, dataPoints.length);
+            //console.log("CLEAR")
+            if(benchmark.benchmark){
+              benchmark_data.length = 0;
+              benchmark_time_offset = null;  
+            }else{
+              lap_data.length = 0;
+              lap_time_offset = null;
+            }
+            
+            //lap_data.splice(0, lap_data.length);
             chart.render();
           }
           if(type == "plot_data" && data.length > 0){
-            //console.log(data);
+            //console.log(1);
             let test = data.split(",");
-            if(Number(test[0])){
+            if(Number(test[0]) == 1){  // Car_telemetry
               //console.log("ploting ", Number(test[1]), Number(test[5]));
-              dataPoints.push({x: Number(test[1]), y:Number(test[5])})
+              if(benchmark){
+                benchmark_data.push(
+                    {
+                      x: Number(test[1]) - benchmark_time_offset, 
+                      y:Number(test[5])
+                    }
+                );
+              }else{
+                lap_data.push(
+                    {
+                      x: Number(test[1]) - lap_time_offset, 
+                      y:Number(test[5])
+                    }
+                );
+              }
               chart.render();
+            }else if(Number(test[0]) == 0){ // Lap_data
+              if(benchmark){
+                if(benchmark_time_offset == null){ 
+                  benchmark_time_offset = Number(test[1]) - Number(test[2]);
+                  //console.log("benchmark_time_offset", benchmark_time_offset);
+                }
+
+              }else{
+                if(lap_time_offset == null){
+                  lap_time_offset = Number(test[1]) -Number(test[2]);
+                  //console.log("lap_time_offset", lap_time_offset);
+                }
+
+              }
             }
           }
         });
+
+        function toggleDataSeries(e) {
+	        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		        e.dataSeries.visible = false;
+	        }
+	        else {
+		        e.dataSeries.visible = true;
+	        }
+	        chart.render();
+        }
       }
     </script>
   </head>
   <body>
-    <div id="chartContainer" style="height: 200px; width: 100%;"></div>
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
   </body>
 </html>
 
