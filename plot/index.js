@@ -56,7 +56,7 @@ function CheckFileLenght(){
       console.log("Stderr while checking data length", stderr);
       return;
     }
-    console.log(stdout);
+    //console.log(stdout);
     if(Number(stdout) > total_lines_read){
       ReadFile(folder_path + file_name);
     }
@@ -114,6 +114,6 @@ setTimeout(()=>{
 });
 
 
-server.listen(3000, () => {
+server.listen(4444, "0.0.0.0", () => {
   console.log('listening on port 3000');
 });

@@ -43,7 +43,7 @@
         const graph_legend = {
           cursor: "pointer",
           verticalAlign: "top",
-          fontSize: 20, 
+          fontSize: 22,
           itemclick : (e)=>{
             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
               e.dataSeries.visible = false;
@@ -76,7 +76,7 @@
               type: "line",
               showInLegend: true,
               name: "ROOKIE",
-              yValueFormatString: "#0.#%",
+              //yValueFormatString: "#0.#%",
               color: graph_colors.rookie,
               dataPoints: lap_data.speed
             }
@@ -114,9 +114,71 @@
 
         };
 
+        var brakeGraph = {
+          theme: graph_theme,
+          title: {
+            text: "Freno"
+          },
+          axisY: {
+            valueFormatString: "#0.#%"
+          },
+          legend: graph_legend,
+          data:[
+            {
+              type: "line",
+              showInLegend: true,
+              name: "MACS",
+              yValueFormatString: "#0.#%",
+              color: graph_colors.prof,
+              dataPoints: benchmark_data.brake
+            },
+            {
+              type: "line",
+              showInLegend: true,
+              name: "ROOKIE",
+              yValueFormatString: "#0.#%",
+              color: graph_colors.rookie,
+              dataPoints: lap_data.brake
+            }
+          ]
+
+        };
+
+        var steerGraph = {
+          theme: graph_theme,
+          title: {
+            text: "Volante"
+          },
+          axisY: {
+            //valueFormatString: "#0.#%"
+          },
+          legend: graph_legend,
+          data:[
+            {
+              type: "line",
+              showInLegend: true,
+              name: "MACS",
+              //yValueFormatString: "#0.#%",
+              color: graph_colors.prof,
+              dataPoints: benchmark_data.steer
+            },
+            {
+              type: "line",
+              showInLegend: true,
+              name: "ROOKIE",
+              //yValueFormatString: "#0.#%",
+              color: graph_colors.rookie,
+              dataPoints: lap_data.steer
+            }
+          ]
+
+        };
 
         dashboard.push(new CanvasJS.Chart("speedGraphContainer", speedGraph));
         dashboard.push(new CanvasJS.Chart("throttleGraphContainer", throttleGraph));
+        dashboard.push(new CanvasJS.Chart("brakeGraphContainer", brakeGraph));
+        dashboard.push(new CanvasJS.Chart("steerGraphContainer", steerGraph));
+
 
         RenderGraphs();
 
@@ -150,7 +212,6 @@
           //console.log(benchmark_time_offset, lap_time_offset);
           if(type == "new_lap"){
             ResetGraph(benchmark); 
-            chart.render();   // TODO update
           }
           if(type == "plot_data" && data.length > 0){
             let parsed_data = data.split(",");
@@ -160,11 +221,15 @@
                 let lap_time = Number(parsed_data[1]) - benchmark_time_offset;
                 benchmark_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
                 benchmark_data.throttle.push({x: lap_time, y:Number(parsed_data[5])});
+                benchmark_data.steer.push({x: lap_time, y:Number(parsed_data[6])});
+                benchmark_data.brake.push({x: lap_time, y:Number(parsed_data[7])});
 
               }else if(!benchmark && lap_time_offset != null){
                 let lap_time = Number(parsed_data[1]) - lap_time_offset;
                 lap_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
                 lap_data.throttle.push({x: lap_time, y: Number(parsed_data[5])});
+                lap_data.steer.push({x: lap_time, y: Number(parsed_data[6])});
+                lap_data.brake.push({x: lap_time, y: Number(parsed_data[7])});
               }
               //chart.render();
             }else if(Number(parsed_data[0]) == 0){ // Lap_data
@@ -189,8 +254,10 @@
     </script>
   </head>
   <body>
-    <div id="speedGraphContainer" style="height: 300px; width: 100%;"></div>
-    <div id="throttleGraphContainer" style="height: 300px; width: 100%;"></div>
+    <div id="speedGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="throttleGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="brakeGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="steerGraphContainer" style="height: 25vh; width: 100%;"></div>
   </body>
 </html>
 
