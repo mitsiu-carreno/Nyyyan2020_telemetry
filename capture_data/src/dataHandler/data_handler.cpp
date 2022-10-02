@@ -1,4 +1,11 @@
 #include <fstream>
+/*
+#include <stdio.h>  // Delete file
+#include <cstring>  // strcpy & strcat
+#include <stdlib.h> // itoa
+#include <stdio.h>
+#include <stdlib.h>
+*/
 
 #include "data_handler.hpp"
 #include "type_alias_F1.hpp"
@@ -23,6 +30,7 @@ void DataHandler::DebugLap(PacketLapData *data){
 void DataHandler::ProcessBuffer(char *buffer, int packet_id){
   static uint8 internal_lap_num = 0;
   static bool writting = false;
+  static float current_timestamp [3];
   switch(packet_id){
     case 2:
       PacketLapData data; // TODO change to pointer??
@@ -32,6 +40,10 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
           && data.m_header.m_sessionTime > 1){
         writting = true;
         internal_lap_num = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapNum;
+        current_timestamp[0] = data.m_header.m_sessionTime;
+        current_timestamp[1] = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapTime;
+        current_timestamp[2] = data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance;
+        /*
         DataHandler::WritePacket(
           0,
           internal_lap_num,
@@ -40,6 +52,21 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
           data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance,
           0,0,0,0
         );
+        */
+      /*
+      }else if(writting){
+        char file_path[100];
+        file_path[99] = '\0';
+        strcpy(file_path, constants::kDataDirectory);
+        char test[10];
+        sprintf(test, "%u", internal_lap_num);
+        strcat(file_path, "lap");
+        strcat(file_path, test);
+        //strcat(file_path, "1");
+        strcat(file_path, ".csv");
+        std::remove(file_path);
+        writting = false;
+        */
       }
       
       //DataHandler::DebugLap(&data);
@@ -53,7 +80,8 @@ void DataHandler::ProcessBuffer(char *buffer, int packet_id){
           1,
           internal_lap_num,
           data2.m_header.m_sessionTime,
-          0,0,
+          data2.m_header.m_sessionTime == current_timestamp[0] ? current_timestamp[1] : 0,
+          data2.m_header.m_sessionTime == current_timestamp[0] ? current_timestamp[2] : 0,
           data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_speed,
           data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_throttle,
           data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_steer,

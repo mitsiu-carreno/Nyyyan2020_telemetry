@@ -15,6 +15,7 @@
         var dashboard = [];
 
         var lap_data = {
+          time: [],
           speed: [],
           throttle: [],
           steer: [],
@@ -22,6 +23,7 @@
         };
 
         var benchmark_data = {
+          time: [],
           speed: [],
           throttle: [],
           steer: [],
@@ -52,6 +54,36 @@
             }
           e.chart.render();
           }
+        };
+
+        var timeDeltaGraph = {
+          theme: graph_theme,
+          title: {
+            text: "Tiempo"
+          },
+          axisY: {
+            //valueFormatString: "#0.#%"
+          },
+          legend: graph_legend,
+          data:[
+            {
+              type: "line",
+              showInLegend: true,
+              name: "MACS",
+              //yValueFormatString: "#0.#%",
+              color: graph_colors.prof,
+              dataPoints: benchmark_data.time
+            },
+            {
+              type: "line",
+              showInLegend: true,
+              name: "ROOKIE",
+              //yValueFormatString: "#0.#%",
+              color: graph_colors.rookie,
+              dataPoints: lap_data.time
+            }
+          ]
+
         };
 
         var speedGraph = {
@@ -174,6 +206,7 @@
 
         };
 
+        dashboard.push(new CanvasJS.Chart("timeDeltaGraphContainer", timeDeltaGraph));
         dashboard.push(new CanvasJS.Chart("speedGraphContainer", speedGraph));
         dashboard.push(new CanvasJS.Chart("throttleGraphContainer", throttleGraph));
         dashboard.push(new CanvasJS.Chart("brakeGraphContainer", brakeGraph));
@@ -215,23 +248,26 @@
           }
           if(type == "plot_data" && data.length > 0){
             let parsed_data = data.split(",");
-            if(Number(parsed_data[0]) == 1){  // Car_telemetry
+            //if(Number(parsed_data[0]) == 1){  // Car_telemetry
 
-              if(benchmark && benchmark_time_offset != null){
-                let lap_time = Number(parsed_data[1]) - benchmark_time_offset;
-                benchmark_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
-                benchmark_data.throttle.push({x: lap_time, y:Number(parsed_data[5])});
-                benchmark_data.steer.push({x: lap_time, y:Number(parsed_data[6])});
-                benchmark_data.brake.push({x: lap_time, y:Number(parsed_data[7])});
+              if(benchmark){
+                //let lap_time = Number(parsed_data[1]) - benchmark_time_offset;
+                benchmark_data.time.push({x: Number(parsed_data[3]), y: Number(parsed_data[2])});
+                benchmark_data.speed.push({x: Number(parsed_data[3]), y: Number(parsed_data[4])});
+                benchmark_data.throttle.push({x: Number(parsed_data[3]), y:Number(parsed_data[5])});
+                benchmark_data.steer.push({x: Number(parsed_data[3]), y:Number(parsed_data[6])});
+                benchmark_data.brake.push({x: Number(parsed_data[3]), y:Number(parsed_data[7])});
 
-              }else if(!benchmark && lap_time_offset != null){
-                let lap_time = Number(parsed_data[1]) - lap_time_offset;
-                lap_data.speed.push({x: lap_time, y: Number(parsed_data[4])});
-                lap_data.throttle.push({x: lap_time, y: Number(parsed_data[5])});
-                lap_data.steer.push({x: lap_time, y: Number(parsed_data[6])});
-                lap_data.brake.push({x: lap_time, y: Number(parsed_data[7])});
+              }else{
+                //let lap_time = Number(parsed_data[1]) - lap_time_offset;
+                lap_data.time.push({x: Number(parsed_data[3]), y: Number(parsed_data[2])});
+                lap_data.speed.push({x: Number(parsed_data[3]), y: Number(parsed_data[4])});
+                lap_data.throttle.push({x: Number(parsed_data[3]), y: Number(parsed_data[5])});
+                lap_data.steer.push({x: Number(parsed_data[3]), y: Number(parsed_data[6])});
+                lap_data.brake.push({x: Number(parsed_data[3]), y: Number(parsed_data[7])});
               }
               //chart.render();
+            /*
             }else if(Number(parsed_data[0]) == 0){ // Lap_data
 
               if(benchmark){
@@ -246,6 +282,7 @@
 
               }
             }
+            */
             RenderGraphs();
           }
         });
@@ -254,10 +291,11 @@
     </script>
   </head>
   <body>
-    <div id="speedGraphContainer" style="height: 25vh; width: 100%;"></div>
-    <div id="throttleGraphContainer" style="height: 25vh; width: 100%;"></div>
-    <div id="brakeGraphContainer" style="height: 25vh; width: 100%;"></div>
-    <div id="steerGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="timeDeltaGraphContainer" style="height: 20vh; width: 100%;"></div>
+    <div id="speedGraphContainer" style="height: 20vh; width: 100%;"></div>
+    <div id="throttleGraphContainer" style="height: 20vh; width: 100%;"></div>
+    <div id="brakeGraphContainer" style="height: 20vh; width: 100%;"></div>
+    <div id="steerGraphContainer" style="height: 20vh; width: 100%;"></div>
   </body>
 </html>
 
