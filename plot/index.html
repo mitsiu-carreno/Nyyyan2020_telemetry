@@ -206,12 +206,36 @@
 
         };
 
-        dashboard.push(new CanvasJS.Chart("timeDeltaGraphContainer", timeDeltaGraph));
+        //dashboard.push(new CanvasJS.Chart("timeDeltaGraphContainer", timeDeltaGraph));
         dashboard.push(new CanvasJS.Chart("speedGraphContainer", speedGraph));
         dashboard.push(new CanvasJS.Chart("throttleGraphContainer", throttleGraph));
         dashboard.push(new CanvasJS.Chart("brakeGraphContainer", brakeGraph));
         dashboard.push(new CanvasJS.Chart("steerGraphContainer", steerGraph));
 
+
+        function SyncGraphs(){
+          if(!this.onToolTipUpdated){
+            this.onToolTipUpdated = function(e){
+              for(var i =0; i < dashboard.length; ++i){
+                if(dashboard[i] != e.chart){
+                  dashboard[i].toolTip.showAt(e.entries[0].xValue);
+                }
+              }
+            }
+          } 
+
+          if(!this.onToolTipHidden){
+            this.onToolTipHidden = function(e){
+              for(var i =0; i < dashboard.length; ++i){
+                if(dashboard[i] != e.chart){
+                  dashboard[i].toolTip.hide();
+                }
+              }
+            }
+          }
+
+
+        }
 
         RenderGraphs();
 
@@ -291,11 +315,11 @@
     </script>
   </head>
   <body>
-    <div id="timeDeltaGraphContainer" style="height: 20vh; width: 100%;"></div>
-    <div id="speedGraphContainer" style="height: 20vh; width: 100%;"></div>
-    <div id="throttleGraphContainer" style="height: 20vh; width: 100%;"></div>
-    <div id="brakeGraphContainer" style="height: 20vh; width: 100%;"></div>
-    <div id="steerGraphContainer" style="height: 20vh; width: 100%;"></div>
+    <!--<div id="timeDeltaGraphContainer" style="height: 20vh; width: 100%;"></div>-->
+    <div id="speedGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="throttleGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="brakeGraphContainer" style="height: 25vh; width: 100%;"></div>
+    <div id="steerGraphContainer" style="height: 25vh; width: 100%;"></div>
   </body>
 </html>
 

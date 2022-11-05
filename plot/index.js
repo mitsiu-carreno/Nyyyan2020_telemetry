@@ -22,7 +22,7 @@ setInterval(()=>{
 
   GetLastFile();
 
-}, 100);
+}, 250);
 
 function GetLastFile(){
   exec("ls -p ../data/ | grep -v / | tail -n 1", (error, stdout, stderr)=>{
@@ -69,6 +69,7 @@ function ReadFile(file){
   var s = fs.createReadStream(file)
     .pipe(es.split())
     .pipe(es.mapSync((line)=>{
+        //console.log(line)
         // Decide whether or not to emit line read
         if(current_lines_read > total_lines_read){
           
@@ -88,7 +89,7 @@ function ReadFile(file){
         console.log("Error while reading file", err);
       })
       .on('end', ()=>{
-        console.log("Read entire file");
+        //console.log("Read entire file");
     })
   );
   }catch(e){
@@ -115,5 +116,5 @@ setTimeout(()=>{
 
 
 server.listen(4444, "0.0.0.0", () => {
-  console.log('listening on port 3000');
+  console.log('listening on port 4444');
 });
