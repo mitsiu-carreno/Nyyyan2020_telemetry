@@ -8,5 +8,6 @@ capture_data/build/*
 !capture_data/build/.gitkeep
 
 data/*
+!data/.gitkeep
 
 node_modules/
