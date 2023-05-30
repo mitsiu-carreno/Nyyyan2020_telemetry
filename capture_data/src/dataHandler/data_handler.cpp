@@ -1,4 +1,7 @@
 #include <fstream>
+
+#include <sstream>
+#include <iomanip>
 /*
 #include <stdio.h>  // Delete file
 #include <cstring>  // strcpy & strcat
@@ -15,10 +18,12 @@
 
 
 void DataHandler::DebugCarTelemetry(PacketCarTelemetryData *data){
-  printf("m_speed %u\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_speed);
-  printf("m_throttle %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_throttle);
-  printf("m_steer %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_steer);
-  printf("m_brake %f\n", data->m_carTelemetryData[data->m_header.m_playerCarIndex].m_brake);
+  printf("(uint8  X.00)header->m_gameMajorVersion %u\n", data->m_header.m_gameMajorVersion);
+  printf("(int8      0)cartel->m_suggestedGear %i\n", data->m_suggestedGear);
+  printf("(uint16 2020)header->m_packetFormat %u\n", data->m_header.m_packetFormat);
+  printf("(float      )header->m_sessionTime %f\n", data->m_header.m_sessionTime);
+  printf("(uint64     )header->m_sessionUID %lu\n", data->m_header.m_sessionUID);
+  printf("(uint32     )header->m_frameIdentifier %u\n\n", data->m_header.m_frameIdentifier);
 }
 
 void DataHandler::DebugLap(PacketLapData *data){
@@ -28,83 +33,244 @@ void DataHandler::DebugLap(PacketLapData *data){
 }
 
 void DataHandler::ProcessBuffer(char *buffer, int packet_id){
-  static uint8 internal_lap_num = 0;
-  static bool writting = false;
-  static float current_timestamp [3];
+  // Creating a stringstream object
+  std::stringstream ss;
+
+  //const uint8 p_index = data2.m_header.m_playerCarIndex;
+  const uint8 p_index = 0;
+
   switch(packet_id){
     case 2:
       PacketLapData data; // TODO change to pointer??
       MarshallLapPacket(buffer, &data);
 
-      if(data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance >= 1 
-          && data.m_header.m_sessionTime > 1){
-        writting = true;
-        internal_lap_num = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapNum;
-        current_timestamp[0] = data.m_header.m_sessionTime;
-        current_timestamp[1] = data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapTime;
-        current_timestamp[2] = data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance;
-        /*
-        DataHandler::WritePacket(
-          0,
-          internal_lap_num,
-          data.m_header.m_sessionTime,
-          data.m_lapData[data.m_header.m_playerCarIndex].m_currentLapTime,
-          data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance,
-          0,0,0,0
-        );
-        */
-      /*
-      }else if(writting){
-        char file_path[100];
-        file_path[99] = '\0';
-        strcpy(file_path, constants::kDataDirectory);
-        char test[10];
-        sprintf(test, "%u", internal_lap_num);
-        strcat(file_path, "lap");
-        strcat(file_path, test);
-        //strcat(file_path, "1");
-        strcat(file_path, ".csv");
-        std::remove(file_path);
-        writting = false;
-        */
-      }
-      
+      //if(data.m_lapData[data.m_header.m_playerCarIndex].m_lapDistance >= 1 
+      //    && data.m_header.m_sessionTime > 1){
+
+       
+      // Formatting the output using manipulators
+      ss << std::fixed << std::setprecision(6) 
+        << data.m_header.m_packetFormat << "," 
+        << static_cast<int>(data.m_header.m_gameMajorVersion) << "," 
+        << static_cast<int>(data.m_header.m_gameMinorVersion) << "," 
+        << static_cast<int>(data.m_header.m_packetVersion) << ","
+        << static_cast<int>(data.m_header.m_packetId) << ","
+        << data.m_header.m_sessionUID << "," 
+        << data.m_header.m_sessionTime << "," 
+        << data.m_header.m_frameIdentifier << ","
+        << static_cast<int>(data.m_header.m_playerCarIndex) << ","
+        << static_cast<int>(data.m_header.m_secondaryPlayerCarIndex) << ","
+        
+        << data.m_lapData[p_index].m_lastLapTime << ","
+        << data.m_lapData[p_index].m_currentLapTime << ","
+        << data.m_lapData[p_index].m_sector1TimeInMS << ","
+        << data.m_lapData[p_index].m_sector2TimeInMS << ","
+        << data.m_lapData[p_index].m_bestLapTime << ","
+        << static_cast<int>(data.m_lapData[p_index].m_bestLapNum) << "," 
+        << data.m_lapData[p_index].m_bestLapSector1TimeInMS << ","
+        << data.m_lapData[p_index].m_bestLapSector2TimeInMS << ","
+        << data.m_lapData[p_index].m_bestLapSector3TimeInMS << ","
+        << data.m_lapData[p_index].m_bestOverallSector1TimeInMS << ","
+        << static_cast<int>(data.m_lapData[p_index].m_bestOverallSector1LapNum) << "," 
+        << data.m_lapData[p_index].m_bestOverallSector2TimeInMS << ","
+        << static_cast<int>(data.m_lapData[p_index].m_bestOverallSector2LapNum) << "," 
+        << data.m_lapData[p_index].m_bestOverallSector3TimeInMS << ","
+        << static_cast<int>(data.m_lapData[p_index].m_bestOverallSector3LapNum) << "," 
+        << data.m_lapData[p_index].m_lapDistance << ","
+        << data.m_lapData[p_index].m_totalDistance << ","
+        << data.m_lapData[p_index].m_safetyCarDelta << ","
+        << static_cast<int>(data.m_lapData[p_index].m_carPosition) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_currentLapNum) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_pitStatus) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_sector) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_currentLapInvalid) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_penalties) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_gridPosition) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_driverStatus) << "," 
+        << static_cast<int>(data.m_lapData[p_index].m_resultStatus);
+
+
+
+        //<< data.m_lapData[p_index]. << ","
+        //<< static_cast<int>(data.m_lapData[p_index].) << "," 
+
+      DataHandler::WritePacket(0, ss.str().c_str());
+
       //DataHandler::DebugLap(&data);
       break;
+
     case 6:
       PacketCarTelemetryData data2;
       MarshallCarTelemetryPacket(buffer, &data2);
+       
+      // Formatting the output using manipulators
+      ss << std::fixed << std::setprecision(6) 
+        << data2.m_header.m_packetFormat << "," 
+        << static_cast<int>(data2.m_header.m_gameMajorVersion) << "," 
+        << static_cast<int>(data2.m_header.m_gameMinorVersion) << "," 
+        << static_cast<int>(data2.m_header.m_packetVersion) << ","
+        << static_cast<int>(data2.m_header.m_packetId) << ","
+        << data2.m_header.m_sessionUID << "," 
+        << data2.m_header.m_sessionTime << "," 
+        << data2.m_header.m_frameIdentifier << ","
+        << static_cast<int>(data2.m_header.m_playerCarIndex) << ","
+        << static_cast<int>(data2.m_header.m_secondaryPlayerCarIndex) << ","
 
-      if(internal_lap_num != 0 && writting){
-        DataHandler::WritePacket(
-          1,
-          internal_lap_num,
-          data2.m_header.m_sessionTime,
-          data2.m_header.m_sessionTime == current_timestamp[0] ? current_timestamp[1] : 0,
-          data2.m_header.m_sessionTime == current_timestamp[0] ? current_timestamp[2] : 0,
-          data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_speed,
-          data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_throttle,
-          data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_steer,
-          data2.m_carTelemetryData[data2.m_header.m_playerCarIndex].m_brake
-        );
-      }
+        << data2.m_carTelemetryData[p_index].m_speed << ","
+        << data2.m_carTelemetryData[p_index].m_throttle << ","
+        << data2.m_carTelemetryData[p_index].m_steer << ","
+        << data2.m_carTelemetryData[p_index].m_brake << ","
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_clutch) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_gear) << "," 
+        << data2.m_carTelemetryData[p_index].m_engineRPM << ","
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_drs) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_revLightsPercent) << "," 
+        << data2.m_carTelemetryData[p_index].m_brakesTemperature[0] << ","
+        << data2.m_carTelemetryData[p_index].m_brakesTemperature[1] << ","
+        << data2.m_carTelemetryData[p_index].m_brakesTemperature[2] << ","
+        << data2.m_carTelemetryData[p_index].m_brakesTemperature[3] << ","
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresSurfaceTemperature[0]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresSurfaceTemperature[1]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresSurfaceTemperature[2]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresSurfaceTemperature[3]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresInnerTemperature[0]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresInnerTemperature[1]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresInnerTemperature[2]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_tyresInnerTemperature[3]) << "," 
+        << data2.m_carTelemetryData[p_index].m_engineTemperature << ","
+        << data2.m_carTelemetryData[p_index].m_tyresPressure[0] << ","
+        << data2.m_carTelemetryData[p_index].m_tyresPressure[1] << ","
+        << data2.m_carTelemetryData[p_index].m_tyresPressure[2] << ","
+        << data2.m_carTelemetryData[p_index].m_tyresPressure[3] << ","
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_surfaceType[0]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_surfaceType[1]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_surfaceType[2]) << "," 
+        << static_cast<int>(data2.m_carTelemetryData[p_index].m_surfaceType[3]);
+
+
+        //<< data2.m_carTelemetryData[p_index]. << ","
+        //<< static_cast<int>(data2.) << ","
+        //<< static_cast<int>(data2.m_carTelemetryData[p_index].) << "," 
+
+      DataHandler::WritePacket(1, ss.str().c_str());
 
       //DataHandler::DebugCarTelemetry(&data2);
       break;
   }
 }
 
-void DataHandler::WritePacket(bool car_tel, uint8 internal_lap_num, float session_time, float current_lap_time, float lap_distance, uint16 speed, float throttle, float steer, float brake){
+void DataHandler::WritePacket(bool isCarTel, const char* data){
+  std::string file_name = isCarTel ? "car_telem.csv" : "lap.csv"; 
+  //std::string file_path = constants::kDataDirectory + "/\0" + std::to_string(session_id) + "/\0" + file_name;
+  std::string file_path = "";
+  //file_path.append(constants::kDataDirectory).append(std::to_string(session_id)).append("/").append(file_name);
+  file_path.append(constants::kDataDirectory).append(file_name);
 
-    std::string file_name = "lap" + std::to_string(internal_lap_num) + ".csv"; 
-    //std::string file_path = constants::kDataDirectory + "/\0" + std::to_string(session_id) + "/\0" + file_name;
-    std::string file_path = "";
-    //file_path.append(constants::kDataDirectory).append(std::to_string(session_id)).append("/").append(file_name);
-    file_path.append(constants::kDataDirectory).append(file_name);
-
-    std::ofstream write_file;
-    write_file.open(file_path, std::ofstream::app);
-    write_file << car_tel << "," << session_time << "," << current_lap_time << "," << lap_distance << "," << speed << "," << throttle << "," << steer << "," << brake <<  "\n";
-    write_file.close();
+  std::ofstream write_file;
+  write_file.open(file_path, std::ofstream::app);
+  write_file << data <<  "\n";
+  write_file.close();
 }
+
+void DataHandler::PrepareFiles(){
+  std::string file_path = "";
+  file_path.append(constants::kDataDirectory).append("car_telem.csv");
+
+  std::ofstream file_h;
+  file_h.open(file_path, std::ofstream::out);
+  file_h 
+    << "packetFormat" << ","
+    << "gameMajorVersion" << ","
+    << "gameMinorVersion" << ","
+    << "packetVersion" << ","
+    << "packetId" << ","
+    << "sessionUID" << ","
+    << "sessionTime" << ","
+    << "frameIdentifier" << ","
+    << "playerCarIndex" << ","
+    << "secondaryPlayerCarIndex" << ","
+
+    << "speed" << ","
+    << "throttle" << ","
+    << "steer" << ","
+    << "brake" << ","
+    << "clutch" << ","
+    << "gear" << ","
+    << "engineRPM" << ","
+    << "drs" << ","
+    << "revLightsPercent" << ","
+    << "brakesTempRearL" << ","
+    << "brakesTempRearR" << ","
+    << "brakesTempFrontL" << ","
+    << "brakesTempFrontR" << ","
+    << "tyresSurfaceTempRearL" << ","
+    << "tyresSurfaceTempRearR" << ","
+    << "tyresSurfaceTempFrontL" << ","
+    << "tyresSurfaceTempFrontR" << ","
+    << "tyresInnerTempRearL" << ","
+    << "tyresInnerTempRearR" << ","
+    << "tyresInnerTempFrontL" << ","
+    << "tyresInnerTempFrontR" << ","
+    << "engineTemperature" << ","
+    << "tyresPressureRearL" << ","
+    << "tyresPressureRearR" << ","
+    << "tyresPressureFrontL" << ","
+    << "tyresPressureFrontR" << ","
+    << "surfaceTypeRearL" << ","
+    << "surfaceTypeRearR" << ","
+    << "surfaceTypeFrontL" << ","
+    << "surfaceTypeFrontR" << "\n";
+
+  file_h.close();
+
+
+  file_path = "";
+  file_path.append(constants::kDataDirectory).append("lap.csv");
+
+  file_h.open(file_path, std::ofstream::out);
+  file_h 
+    << "packetFormat" << ","
+    << "gameMajorVersion" << ","
+    << "gameMinorVersion" << ","
+    << "packetVersion" << ","
+    << "packetId" << ","
+    << "sessionUID" << ","
+    << "sessionTime" << ","
+    << "frameIdentifier" << ","
+    << "playerCarIndex" << ","
+    << "secondaryPlayerCarIndex" << ","
+
+    << "lastLapTime" << ","
+    << "currentLapTime" << ","
+    << "sector1TimeInMS" << ","
+    << "sector2TimeInMS" << ","
+    << "bestLapTime" << ","
+    << "bestLapNum" << ","
+    << "bestLapSector1TimeInMS" << ","
+    << "bestLapSector2TimeInMS" << ","
+    << "bestLapSector3TimeInMS" << ","
+    << "bestOverallSector1TimeInMS" << ","
+    << "bestOverallSector1LapNum" << ","
+    << "bestOverallSector2TimeInMS" << ","
+    << "bestOverallSector2LapNum" << ","
+    << "bestOverallSector3TimeInMS" << ","
+    << "bestOverallSector3LapNum" << ","
+    << "lapDistance" << ","
+    << "totalDistance" << ","
+    << "safetyCarDelta" << ","
+    << "carPosition" << ","
+    << "currentLapNum" << ","
+    << "pitStatus" << ","
+    << "sector" << ","
+    << "currentLapInvalid" << ","
+    << "penalties" << ","
+    << "gridPosition" << ","
+    << "driverStatus" << ","
+    << "resultStatus" << "\n";
+
+  file_h.close();
+}
+
+
+
 

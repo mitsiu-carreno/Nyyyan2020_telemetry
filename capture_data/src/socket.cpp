@@ -10,6 +10,7 @@
 
 
 void sockethandler::ListenConnections(){
+    DataHandler::PrepareFiles();
     int sock_fd; 
     
     // Create unbound socket in the specified domain: man socket
