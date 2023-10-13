@@ -1,6 +1,6 @@
 #include <cstring>
 #include "car_telemetry_packet.hpp"
-
+/*
 void MarshallCarTelemetry(char *buffer, CarTelemetryData *struct_addr, unsigned int &buffer_offset){
   memcpy(&struct_addr->m_speed, &buffer[buffer_offset], sizeof(struct_addr->m_speed));
   buffer_offset += sizeof(struct_addr->m_speed);
@@ -76,5 +76,69 @@ void MarshallCarTelemetryPacket(char *buffer, PacketCarTelemetryData *struct_add
 
   memcpy(&struct_addr->m_suggestedGear, &buffer[buffer_offset], sizeof(struct_addr->m_suggestedGear));
   buffer_offset += sizeof(struct_addr->m_suggestedGear); 
+
+}
+*/
+
+void MarshallCarTelemetryPacket(char *buffer, PacketCarTelemetryData *struct_addr){
+  unsigned int buffer_offset = MarshallHeader(buffer, &struct_addr->m_header);
+
+   for(int i = 0;i < 22;i++)
+    {
+        memcpy(&struct_addr->m_carTelemetryData[i].m_speed,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_speed));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_speed);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_throttle,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_throttle));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_throttle);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_steer,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_steer));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_steer);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_brake,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_brake));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_brake);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_clutch,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_clutch));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_clutch);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_gear,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_gear));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_gear);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_engineRPM,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_engineRPM));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_engineRPM);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_drs,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_drs));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_drs);
+        memcpy(&struct_addr->m_carTelemetryData[i].m_revLightsPercent,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_revLightsPercent));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_revLightsPercent);
+        for(int j = 0;j < 4;j++)
+        {
+            memcpy(&struct_addr->m_carTelemetryData[i].m_brakesTemperature[j],&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_brakesTemperature[j]));
+            buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_brakesTemperature[j]);
+        }
+        for(int j = 0;j < 4;j++)
+        {
+            memcpy(&struct_addr->m_carTelemetryData[i].m_tyresSurfaceTemperature[j],&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_tyresSurfaceTemperature[j]));
+            buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_tyresSurfaceTemperature[j]);
+        }
+        for(int j = 0;j < 4;j++)
+        {
+            memcpy(&struct_addr->m_carTelemetryData[i].m_tyresInnerTemperature[j],&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_tyresInnerTemperature[j]));
+            buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_tyresInnerTemperature[j]);
+        }
+        memcpy(&struct_addr->m_carTelemetryData[i].m_engineTemperature,&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_engineTemperature));
+        buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_engineTemperature);
+        for(int j = 0;j < 4;j++)
+        {
+            memcpy(&struct_addr->m_carTelemetryData[i].m_tyresPressure[j],&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_tyresPressure[j]));
+            buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_tyresPressure[j]);
+        }
+        for(int j = 0;j < 4;j++)
+        {
+            memcpy(&struct_addr->m_carTelemetryData[i].m_surfaceType[j],&buffer[buffer_offset],sizeof(struct_addr->m_carTelemetryData[i].m_surfaceType[j]));
+            buffer_offset += sizeof(struct_addr->m_carTelemetryData[i].m_surfaceType[j]);
+        }
+    }
+    memcpy(&struct_addr->m_buttonStatus,&buffer[buffer_offset],sizeof(struct_addr->m_buttonStatus));
+    buffer_offset += sizeof(struct_addr->m_buttonStatus);
+    memcpy(&struct_addr->m_mfdPanelIndex,&buffer[buffer_offset],sizeof(struct_addr->m_mfdPanelIndex));
+    buffer_offset += sizeof(struct_addr->m_mfdPanelIndex);
+    memcpy(&struct_addr->m_mfdPanelIndexSecondaryPlayer,&buffer[buffer_offset],sizeof(struct_addr->m_mfdPanelIndexSecondaryPlayer));
+    buffer_offset += sizeof(struct_addr->m_mfdPanelIndexSecondaryPlayer);
+    memcpy(&struct_addr->m_suggestedGear,&buffer[buffer_offset],sizeof(struct_addr->m_suggestedGear));
+    buffer_offset += sizeof(struct_addr->m_suggestedGear);
+
 
 }
